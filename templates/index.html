@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume-Job Compatibility Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-brain"></i>
+                    Resume-Job Compatibility Analyzer
+                </h1>
+                <p class="subtitle">
+                    Powered by custom Machine Learning to analyze resume-job compatibility and provide actionable insights
+                </p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section" id="inputSection">
+                <div class="input-grid">
+                    <div class="input-card">
+                        <div class="input-header">
+                            <i class="fas fa-file-alt"></i>
+                            <h3>Resume Content</h3>
+                        </div>
+                        <textarea 
+                            id="resumeText" 
+                            placeholder="Paste your resume content here... Include your skills, experience, education, and achievements."
+                            class="input-textarea"
+                            rows="12"
+                        ></textarea>
+                        <div class="input-footer">
+                            <span class="char-count" id="resumeCharCount">0 characters</span>
+                        </div>
+                    </div>
+
+                    <div class="input-card">
+                        <div class="input-header">
+                            <i class="fas fa-briefcase"></i>
+                            <h3>Job Description</h3>
+                        </div>
+                        <textarea 
+                            id="jobText" 
+                            placeholder="Paste the job description here... Include required skills, experience level, responsibilities, and qualifications."
+                            class="input-textarea"
+                            rows="12"
+                        ></textarea>
+                        <div class="input-footer">
+                            <span class="char-count" id="jobCharCount">0 characters</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analyze-section">
+                    <button id="analyzeBtn" class="analyze-btn">
+                        <i class="fas fa-search"></i>
+                        <span>Analyze Compatibility</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Loading Section -->
+            <section class="loading-section" id="loadingSection" style="display: none;">
+                <div class="loading-card">
+                    <div class="loading-spinner">
+                        <i class="fas fa-cog fa-spin"></i>
+                    </div>
+                    <h3>Analyzing Compatibility</h3>
+                    <p>Processing your resume and job description with our ML engine...</p>
+                    <div class="loading-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span class="progress-text" id="progressText">0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <!-- Compatibility Score Display -->
+                <div class="score-card">
+                    <div class="score-display">
+                        <div class="score-circle" id="scoreCircle">
+                            <div class="score-value" id="scoreValue">0%</div>
+                            <div class="score-label">Compatibility</div>
+                        </div>
+                        <div class="score-info">
+                            <h2 class="compatibility-level" id="compatibilityLevel">Analyzing...</h2>
+                            <p class="improvement-potential" id="improvementPotential">
+                                <i class="fas fa-arrow-up"></i>
+                                Calculating improvement potential...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Analysis -->
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <i class="fas fa-code"></i>
+                            <h3>Skill Analysis</h3>
+                        </div>
+                        <div class="skill-breakdown" id="skillBreakdown">
+                            <!-- Skills will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Match Breakdown</h3>
+                        </div>
+                        <div class="match-breakdown" id="matchBreakdown">
+                            <!-- Match details will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="recommendations-card">
+                    <div class="card-header">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Improvement Recommendations</h3>
+                    </div>
+                    <div class="recommendations-list" id="recommendationsList">
+                        <!-- Recommendations will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn secondary" id="newAnalysisBtn">
+                        <i class="fas fa-plus"></i>
+                        New Analysis
+                    </button>
+                    <button class="action-btn primary" id="exportBtn">
+                        <i class="fas fa-download"></i>
+                        Export Results
+                    </button>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section class="error-section" id="errorSection" style="display: none;">
+                <div class="error-card">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Analysis Error</h3>
+                    <p class="error-message" id="errorMessage">Something went wrong during analysis.</p>
+                    <button class="retry-btn" id="retryBtn">
+                        <i class="fas fa-redo"></i>
+                        Try Again
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Resume-Job Compatibility Analyzer. Powered by custom Machine Learning.</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
