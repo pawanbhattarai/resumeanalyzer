@@ -20,6 +20,17 @@
                 <p class="subtitle">
                     Powered by custom Machine Learning trained on authentic data from LinkedIn Tech Jobs, Indeed Official Tracker, and GitHub repositories to analyze resume-job compatibility and provide actionable insights
                 </p>
+                {% if has_used_free %}
+                <div class="free-used-notice">
+                    <i class="fas fa-info-circle"></i>
+                    <span>You've used your free analysis. Register for unlimited access!</span>
+                </div>
+                {% else %}
+                <div class="free-trial-notice">
+                    <i class="fas fa-gift"></i>
+                    <span>Try one free analysis before signing up!</span>
+                </div>
+                {% endif %}
                 <div class="header-actions">
                     <a href="/training-info" class="info-link">
                         <i class="fas fa-info-circle"></i>
@@ -78,10 +89,15 @@
                 </div>
 
                 <div class="analyze-section">
-                    <button id="analyzeBtn" class="analyze-btn">
+                    <button id="analyzeBtn" class="analyze-btn" {% if has_used_free %}disabled{% endif %}>
                         <i class="fas fa-search"></i>
-                        <span>Analyze Compatibility</span>
+                        <span>{% if has_used_free %}Free Analysis Used - Please Login{% else %}Try Free Analysis{% endif %}</span>
                     </button>
+                    {% if has_used_free %}
+                    <p class="analyze-notice">
+                        <a href="{{ url_for('auth.register') }}" class="register-link">Sign up free</a> for unlimited analyses and saved history
+                    </p>
+                    {% endif %}
                 </div>
             </section>
 

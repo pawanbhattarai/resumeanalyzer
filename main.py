@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
 from flask_cors import CORS
 from flask_login import LoginManager, login_required, current_user
 from models import db, User, AnalysisHistory
@@ -55,10 +55,14 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    """Landing page"""
+    """Landing page with free analysis option"""
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    return render_template('index.html')
+    
+    # Check if user has already used their free analysis
+    has_used_free = session.get('used_free_analysis', False)
+    
+    return render_template('index.html', has_used_free=has_used_free)
 
 @app.route('/dashboard')
 @login_required
@@ -139,7 +143,6 @@ def view_analysis(analysis_id):
     return render_template('view_analysis.html', analysis=analysis)
 
 @app.route('/api/analyze', methods=['POST'])
-@login_required
 def api_analyze():
     """API endpoint for analysis (for AJAX requests)"""
     try:
@@ -147,6 +150,16 @@ def api_analyze():
         
         if not data or 'resume' not in data or 'job_description' not in data:
             return jsonify({'error': 'Missing resume or job description'}), 400
+        
+        # Check if user is authenticated or can use free analysis
+        if not current_user.is_authenticated:
+            if session.get('used_free_analysis', False):
+                return jsonify({
+                    'error': 'Free analysis limit reached. Please register for unlimited access.',
+                    'require_login': True
+                }), 401
+            # Mark free analysis as used
+            session['used_free_analysis'] = True
         
         resume_text = data['resume'].strip()
         job_text = data['job_description'].strip()
@@ -157,8 +170,13 @@ def api_analyze():
         # Perform analysis
         result = analyzer.analyze_compatibility(resume_text, job_text)
         
-        # Save to history if requested
-        if data.get('save_analysis', False):
+        # Add free analysis indicator
+        if not current_user.is_authenticated:
+            result['is_free_analysis'] = True
+            result['message'] = 'This was your free analysis! Register for unlimited access and to save your results.'
+        
+        # Save to history if user is authenticated and requested
+        if current_user.is_authenticated and data.get('save_analysis', False):
             analysis = AnalysisHistory(
                 user_id=current_user.id,
                 job_title=data.get('job_title', 'Untitled Position'),
@@ -187,6 +205,14 @@ def api_status():
         'version': '2.0.0'
     })
 
+@app.route('/api/health')
+def api_health():
+    """API health check"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.utcnow().isoformat()
+    })
+
 @app.route('/training-info')
 def training_info():
     """Training data information page"""
@@ -195,12 +221,32 @@ def training_info():
 # Error handlers
 @app.errorhandler(404)
 def not_found_error(error):
-    return render_template('errors/404.html'), 404
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head><title>Page Not Found</title></head>
+    <body style="font-family: Arial; text-align: center; margin-top: 100px;">
+        <h1>404 - Page Not Found</h1>
+        <p>The page you're looking for doesn't exist.</p>
+        <a href="/" style="color: #2563eb;">← Back to Home</a>
+    </body>
+    </html>
+    """, 404
 
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
-    return render_template('errors/500.html'), 500
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head><title>Server Error</title></head>
+    <body style="font-family: Arial; text-align: center; margin-top: 100px;">
+        <h1>500 - Server Error</h1>
+        <p>Something went wrong on our end.</p>
+        <a href="/" style="color: #2563eb;">← Back to Home</a>
+    </body>
+    </html>
+    """, 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
