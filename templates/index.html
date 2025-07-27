@@ -17,9 +17,6 @@
                     <i class="fas fa-brain"></i>
                     Resume-Job Compatibility Analyzer
                 </h1>
-                <p class="subtitle">
-                    Powered by custom Machine Learning trained on authentic data from LinkedIn Tech Jobs, Indeed Official Tracker, and GitHub repositories to analyze resume-job compatibility and provide actionable insights
-                </p>
                 {% if has_used_free %}
                 <div class="free-used-notice">
                     <i class="fas fa-info-circle"></i>
@@ -32,10 +29,6 @@
                 </div>
                 {% endif %}
                 <div class="header-actions">
-                    <a href="/training-info" class="info-link">
-                        <i class="fas fa-info-circle"></i>
-                        View Training Data Info
-                    </a>
                     <div class="auth-buttons">
                         <a href="{{ url_for('auth.login') }}" class="auth-btn login">
                             <i class="fas fa-sign-in-alt"></i>
