@@ -10,13 +10,35 @@
 </head>
 <body>
     <div class="container">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <i class="fas fa-brain"></i>
+                    <span class="brand-text">Resume Analyzer</span>
+                </div>
+                <div class="nav-auth">
+                    <a href="{{ url_for('auth.login') }}" class="nav-btn login-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a>
+                    <a href="{{ url_for('auth.register') }}" class="nav-btn register-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Sign Up Free
+                    </a>
+                </div>
+            </div>
+        </nav>
+
         <!-- Header Section -->
         <header class="header">
             <div class="header-content">
                 <h1 class="title">
-                    <i class="fas fa-brain"></i>
-                    Resume-Job Compatibility Analyzer
+                    AI-Powered Resume-Job Compatibility Analyzer
                 </h1>
+                <p class="subtitle">
+                    Discover how well your resume matches job requirements with our advanced ML technology
+                </p>
                 {% if has_used_free %}
                 <div class="free-used-notice">
                     <i class="fas fa-info-circle"></i>
@@ -28,18 +50,6 @@
                     <span>Try one free analysis before signing up!</span>
                 </div>
                 {% endif %}
-                <div class="header-actions">
-                    <div class="auth-buttons">
-                        <a href="{{ url_for('auth.login') }}" class="auth-btn login">
-                            <i class="fas fa-sign-in-alt"></i>
-                            Login
-                        </a>
-                        <a href="{{ url_for('auth.register') }}" class="auth-btn register">
-                            <i class="fas fa-user-plus"></i>
-                            Sign Up Free
-                        </a>
-                    </div>
-                </div>
             </div>
         </header>
 
