@@ -4,12 +4,17 @@ import json
 from collections import defaultdict, Counter
 from data.training_data import TRAINING_DATA
 try:
-    from data.massive_training_data import MASSIVE_TRAINING_DATA
-    print(f"🚀 Loaded MASSIVE training dataset with {len(MASSIVE_TRAINING_DATA)} examples from real job market data!")
-    DEFAULT_TRAINING_DATA = MASSIVE_TRAINING_DATA
+    from data.real_training_data import REAL_TRAINING_DATA
+    print(f"🎯 Loaded AUTHENTIC training dataset with {len(REAL_TRAINING_DATA)} examples from real LinkedIn, Indeed, and GitHub job data!")
+    DEFAULT_TRAINING_DATA = REAL_TRAINING_DATA
 except ImportError:
-    print(f"📊 Fallback: Using base training data with {len(TRAINING_DATA)} examples")
-    DEFAULT_TRAINING_DATA = TRAINING_DATA
+    try:
+        from data.massive_training_data import MASSIVE_TRAINING_DATA
+        print(f"🚀 Loaded MASSIVE training dataset with {len(MASSIVE_TRAINING_DATA)} examples from real job market data!")
+        DEFAULT_TRAINING_DATA = MASSIVE_TRAINING_DATA
+    except ImportError:
+        print(f"📊 Fallback: Using base training data with {len(TRAINING_DATA)} examples")
+        DEFAULT_TRAINING_DATA = TRAINING_DATA
 
 class ResumeAnalyzer:
     """Custom Resume-Job Compatibility Analyzer with Naive Bayes Classification"""
