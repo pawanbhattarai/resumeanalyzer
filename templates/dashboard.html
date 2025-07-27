@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-brain"></i>
+                <span>Resume Analyzer</span>
+            </div>
+            <div class="nav-menu">
+                <a href="{{ url_for('dashboard') }}" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('analyze') }}" class="nav-link">
+                    <i class="fas fa-search"></i>
+                    New Analysis
+                </a>
+                <a href="{{ url_for('history') }}" class="nav-link">
+                    <i class="fas fa-history"></i>
+                    History
+                </a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        <i class="fas fa-user"></i>
+                        {{ current_user.first_name }}
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                            <i class="fas fa-user-cog"></i>
+                            Profile
+                        </a>
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-card">
+                    <div class="welcome-content">
+                        <h1>Welcome back, {{ current_user.first_name }}!</h1>
+                        <p>Ready to analyze your resume compatibility? Track your progress and improve your job prospects.</p>
+                        <a href="{{ url_for('analyze') }}" class="action-btn primary">
+                            <i class="fas fa-plus"></i>
+                            Start New Analysis
+                        </a>
+                    </div>
+                    <div class="welcome-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>{{ total_analyses }}</h3>
+                                <p>Total Analyses</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>{{ avg_score }}%</h3>
+                                <p>Average Score</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Analyses -->
+            {% if recent_analyses %}
+            <section class="recent-section">
+                <div class="section-header">
+                    <h2>Recent Analyses</h2>
+                    <a href="{{ url_for('history') }}" class="view-all-link">
+                        View All <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="analyses-grid">
+                    {% for analysis in recent_analyses %}
+                    <div class="analysis-card">
+                        <div class="analysis-header">
+                            <div class="analysis-title">
+                                <h3>{{ analysis.job_title }}</h3>
+                                <p>{{ analysis.company_name }}</p>
+                            </div>
+                            <div class="compatibility-badge {{ analysis.compatibility_level.lower().replace(' ', '-') }}">
+                                {{ "%.0f"|format(analysis.compatibility_score * 100) }}%
+                            </div>
+                        </div>
+                        <div class="analysis-meta">
+                            <span class="analysis-date">
+                                <i class="fas fa-calendar"></i>
+                                {{ analysis.created_at.strftime('%b %d, %Y') }}
+                            </span>
+                            <a href="{{ url_for('view_analysis', analysis_id=analysis.id) }}" class="view-link">
+                                View Details <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% else %}
+            <section class="empty-state">
+                <div class="empty-card">
+                    <i class="fas fa-search"></i>
+                    <h3>No analyses yet</h3>
+                    <p>Start your first resume analysis to see your compatibility scores and improvement recommendations.</p>
+                    <a href="{{ url_for('analyze') }}" class="action-btn primary">
+                        <i class="fas fa-rocket"></i>
+                        Get Started
+                    </a>
+                </div>
+            </section>
+            {% endif %}
+        </main>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        <i class="fas fa-info-circle"></i>
+                        {{ message }}
+                        <button class="flash-close">&times;</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        // Flash message auto-hide
+        document.querySelectorAll('.flash-message').forEach(msg => {
+            setTimeout(() => msg.remove(), 5000);
+            msg.querySelector('.flash-close').onclick = () => msg.remove();
+        });
+    </script>
+</body>
+</html>
