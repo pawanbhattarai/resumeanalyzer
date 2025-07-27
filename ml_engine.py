@@ -3,6 +3,13 @@ import math
 import json
 from collections import defaultdict, Counter
 from data.training_data import TRAINING_DATA
+try:
+    from data.expanded_training_data import EXPANDED_TRAINING_DATA
+    print(f"✅ Loaded expanded training data with {len(EXPANDED_TRAINING_DATA)} examples")
+    DEFAULT_TRAINING_DATA = EXPANDED_TRAINING_DATA
+except ImportError:
+    print(f"📊 Using original training data with {len(TRAINING_DATA)} examples")
+    DEFAULT_TRAINING_DATA = TRAINING_DATA
 
 class ResumeAnalyzer:
     """Custom Resume-Job Compatibility Analyzer with Naive Bayes Classification"""
@@ -114,7 +121,9 @@ class ResumeAnalyzer:
     def train_model(self, training_data=None):
         """Train Naive Bayes model with training data"""
         if training_data is None:
-            training_data = TRAINING_DATA
+            training_data = DEFAULT_TRAINING_DATA
+            
+        print(f"🧠 Training model with {len(training_data)} examples...")
         
         # Initialize counters
         class_counts = Counter()

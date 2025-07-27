@@ -200,26 +200,117 @@ class TechJobDataCollector:
         return 'general'
     
     def _extract_skills_from_text(self, text: str) -> List[str]:
-        """Extract technical skills from job description"""
+        """Extract technical skills from job description with comprehensive patterns"""
         text_lower = text.lower()
-        
-        # Comprehensive skill list based on real job data
-        tech_skills = [
-            'python', 'java', 'javascript', 'typescript', 'go', 'rust', 'c++', 'c#',
-            'react', 'vue', 'angular', 'django', 'flask', 'spring', 'node.js',
-            'aws', 'azure', 'gcp', 'docker', 'kubernetes', 'terraform',
-            'mysql', 'postgresql', 'mongodb', 'redis', 'elasticsearch',
-            'git', 'jenkins', 'gitlab', 'github actions', 'ci/cd',
-            'tensorflow', 'pytorch', 'scikit-learn', 'pandas', 'numpy',
-            'spark', 'hadoop', 'kafka', 'airflow', 'snowflake',
-            'prometheus', 'grafana', 'datadog', 'elk stack'
-        ]
-        
+
+        # Massively expanded skill list covering all major tech domains
+        tech_skills = {
+            # Programming Languages
+            'python', 'java', 'javascript', 'typescript', 'go', 'rust', 'c++', 'c#', 'c', 
+            'swift', 'kotlin', 'scala', 'ruby', 'php', 'perl', 'r', 'matlab', 'objective-c',
+            'dart', 'solidity', 'elixir', 'erlang', 'haskell', 'clojure', 'f#', 'vb.net',
+
+            # Web Frameworks
+            'react', 'vue', 'angular', 'django', 'flask', 'fastapi', 'spring', 'spring boot',
+            'express', 'nestjs', 'next.js', 'nuxt', 'gatsby', 'svelte', 'ember', 'backbone',
+            'laravel', 'symfony', 'codeigniter', 'rails', 'sinatra', 'asp.net', 'blazor',
+
+            # Mobile Development
+            'react native', 'flutter', 'xamarin', 'ionic', 'cordova', 'phonegap', 'unity',
+            'cocos2d', 'unreal engine', 'android studio', 'xcode', 'swiftui', 'jetpack compose',
+
+            # Cloud Platforms
+            'aws', 'azure', 'gcp', 'alibaba cloud', 'oracle cloud', 'digitalocean', 'heroku',
+            'vercel', 'netlify', 'firebase', 'supabase', 'cloudflare', 'linode', 'vultr',
+
+            # AWS Services
+            'ec2', 's3', 'lambda', 'rds', 'dynamodb', 'cloudfront', 'route53', 'vpc',
+            'iam', 'cloudformation', 'cloudwatch', 'sns', 'sqs', 'kinesis', 'redshift',
+            'eks', 'ecs', 'fargate', 'api gateway', 'cognito', 'secrets manager',
+
+            # Azure Services
+            'azure functions', 'azure sql', 'cosmos db', 'azure storage', 'azure ad',
+            'azure devops', 'azure kubernetes service', 'azure container instances',
+
+            # DevOps & Infrastructure
+            'docker', 'kubernetes', 'terraform', 'ansible', 'puppet', 'chef', 'vagrant',
+            'helm', 'istio', 'envoy', 'consul', 'vault', 'nomad', 'packer', 'jenkins',
+            'gitlab ci', 'github actions', 'circleci', 'travis ci', 'bamboo', 'teamcity',
+            'argocd', 'flux', 'tekton', 'spinnaker',
+
+            # Databases
+            'mysql', 'postgresql', 'mongodb', 'redis', 'elasticsearch', 'sqlite', 'oracle',
+            'sql server', 'mariadb', 'cassandra', 'neo4j', 'influxdb', 'clickhouse',
+            'dynamodb', 'firestore', 'couchdb', 'rethinkdb', 'arangodb', 'snowflake',
+            'bigquery', 'redshift', 'databricks', 'cockroachdb', 'planetscale',
+
+            # Data Science & ML
+            'tensorflow', 'pytorch', 'keras', 'scikit-learn', 'pandas', 'numpy', 'scipy',
+            'matplotlib', 'seaborn', 'plotly', 'jupyter', 'anaconda', 'mlflow', 'kubeflow',
+            'airflow', 'prefect', 'dask', 'ray', 'spark', 'hadoop', 'hive', 'pig',
+            'kafka', 'pulsar', 'storm', 'flink', 'beam', 'nifi',
+
+            # Frontend Technologies
+            'html', 'css', 'sass', 'less', 'stylus', 'bootstrap', 'tailwind', 'bulma',
+            'material-ui', 'ant design', 'chakra ui', 'semantic ui', 'foundation',
+            'webpack', 'vite', 'rollup', 'parcel', 'gulp', 'grunt', 'babel', 'eslint',
+            'prettier', 'styled-components', 'emotion', 'redux', 'mobx', 'zustand',
+
+            # Testing Frameworks
+            'jest', 'mocha', 'chai', 'jasmine', 'karma', 'protractor', 'cypress', 'playwright',
+            'selenium', 'webdriver', 'puppeteer', 'junit', 'testng', 'mockito', 'pytest',
+            'unittest', 'nose', 'tox', 'coverage', 'codecov', 'sonarqube',
+
+            # Monitoring & Observability
+            'prometheus', 'grafana', 'datadog', 'new relic', 'dynatrace', 'splunk',
+            'elk stack', 'logstash', 'kibana', 'fluentd', 'jaeger', 'zipkin', 'opentelemetry',
+            'sentry', 'rollbar', 'bugsnag', 'pagerduty', 'opsgenie', 'pingdom',
+
+            # Security Tools
+            'owasp', 'nessus', 'burp suite', 'metasploit', 'nmap', 'wireshark', 'snort',
+            'ossec', 'fail2ban', 'iptables', 'firewalld', 'selinux', 'apparmor',
+
+            # API Technologies
+            'rest', 'graphql', 'grpc', 'soap', 'websockets', 'webhooks', 'openapi',
+            'swagger', 'postman', 'insomnia', 'apollo', 'relay', 'hasura', 'prisma',
+
+            # Version Control
+            'git', 'github', 'gitlab', 'bitbucket', 'svn', 'mercurial', 'perforce',
+            'git flow', 'github flow', 'trunk-based development',
+
+            # Operating Systems
+            'linux', 'ubuntu', 'centos', 'rhel', 'debian', 'alpine', 'windows', 'macos',
+            'unix', 'bash', 'zsh', 'powershell', 'cmd', 'shell scripting',
+
+            # Methodologies
+            'agile', 'scrum', 'kanban', 'lean', 'devops', 'tdd', 'bdd', 'ddd', 'microservices',
+            'monolith', 'event-driven', 'cqrs', 'event sourcing', 'clean architecture',
+            'hexagonal architecture', 'mvc', 'mvp', 'mvvm', 'solid principles',
+
+            # Blockchain & Crypto
+            'blockchain', 'bitcoin', 'ethereum', 'smart contracts', 'defi', 'nft',
+            'web3', 'metamask', 'truffle', 'hardhat', 'ganache', 'ipfs',
+
+            # Game Development
+            'unity', 'unreal engine', 'godot', 'cocos2d', 'phaser', 'three.js', 'webgl',
+            'opengl', 'directx', 'vulkan', 'metal', 'hlsl', 'glsl',
+
+            # IoT & Embedded
+            'arduino', 'raspberry pi', 'esp32', 'mqtt', 'coap', 'zigbee', 'bluetooth',
+            'wifi', 'lora', 'sigfox', 'nb-iot', 'rtos', 'freertos', 'zephyr',
+
+            # Analytics & BI
+            'tableau', 'power bi', 'looker', 'qlik', 'spotfire', 'superset', 'metabase',
+            'google analytics', 'adobe analytics', 'mixpanel', 'amplitude', 'segment'
+        }
+
         found_skills = []
         for skill in tech_skills:
-            if skill in text_lower:
+            # Use word boundaries to avoid partial matches
+            pattern = r'\b' + re.escape(skill.lower()) + r'\b'
+            if re.search(pattern, text_lower):
                 found_skills.append(skill)
-                
+
         return found_skills
     
     def generate_training_examples(self, collected_jobs: List[Dict]) -> List[Tuple[str, str, str]]:
