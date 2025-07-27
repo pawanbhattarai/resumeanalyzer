@@ -4,11 +4,11 @@ import json
 from collections import defaultdict, Counter
 from data.training_data import TRAINING_DATA
 try:
-    from data.expanded_training_data import EXPANDED_TRAINING_DATA
-    print(f"✅ Loaded expanded training data with {len(EXPANDED_TRAINING_DATA)} examples")
-    DEFAULT_TRAINING_DATA = EXPANDED_TRAINING_DATA
+    from data.massive_training_data import MASSIVE_TRAINING_DATA
+    print(f"🚀 Loaded MASSIVE training dataset with {len(MASSIVE_TRAINING_DATA)} examples from real job market data!")
+    DEFAULT_TRAINING_DATA = MASSIVE_TRAINING_DATA
 except ImportError:
-    print(f"📊 Using original training data with {len(TRAINING_DATA)} examples")
+    print(f"📊 Fallback: Using base training data with {len(TRAINING_DATA)} examples")
     DEFAULT_TRAINING_DATA = TRAINING_DATA
 
 class ResumeAnalyzer:
