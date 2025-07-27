@@ -110,15 +110,16 @@ class CompatibilityAnalyzer {
     async checkSystemHealth() {
         try {
             const response = await fetch('/api/health');
-            const data = await response.json();
-
+            
             if (!response.ok) {
-                console.warn('System health check failed:', data);
-            } else {
-                console.log('System healthy:', data);
+                console.warn('System health check failed with status:', response.status);
+                return;
             }
+            
+            const data = await response.json();
+            console.log('System healthy:', data);
         } catch (error) {
-            console.error('Health check error:', error);
+            console.error('Health check error - network or parsing issue:', error.message || error);
         }
     }
 
@@ -462,9 +463,8 @@ class CompatibilityAnalyzer {
     }
 
     showLoginRequired(message) {
-        // Implement your login redirection logic here
-        // For example, redirect to a login page with an error message:
-        window.location.href = `/login?error=${encodeURIComponent(message)}`;
+        // Redirect to the correct auth login page
+        window.location.href = `/auth/login?error=${encodeURIComponent(message)}`;
     }
 }
 
