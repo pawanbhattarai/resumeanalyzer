@@ -13,11 +13,21 @@ class ResumeAnalyzer:
         self.class_probs = {}
         self.word_probs = {}
         self.skill_categories = {
-            'programming': ['python', 'java', 'javascript', 'c++', 'c#', 'php', 'ruby', 'go', 'rust', 'swift', 'kotlin'],
-            'frameworks': ['django', 'flask', 'react', 'angular', 'vue', 'spring', 'express', 'laravel', 'rails'],
-            'tools': ['git', 'docker', 'kubernetes', 'jenkins', 'aws', 'azure', 'gcp', 'mysql', 'postgresql', 'mongodb'],
-            'databases': ['mysql', 'postgresql', 'mongodb', 'redis', 'sqlite', 'oracle', 'sql server'],
-            'web': ['html', 'css', 'bootstrap', 'jquery', 'ajax', 'rest', 'api', 'json', 'xml']
+            'programming': ['python', 'java', 'javascript', 'typescript', 'c++', 'c#', 'go', 'rust', 'swift', 'kotlin', 'scala', 'r', 'php', 'ruby', 'objective-c', 'solidity'],
+            'frameworks': ['django', 'flask', 'fastapi', 'react', 'angular', 'vue', 'nextjs', 'nuxt', 'spring', 'spring boot', 'express', 'nestjs', 'laravel', 'rails', 'dotnet', 'asp.net', 'unity', 'react native', 'flutter'],
+            'cloud': ['aws', 'azure', 'gcp', 'lambda', 'ec2', 's3', 'rds', 'eks', 'ecs', 'cloudformation', 'terraform', 'serverless', 'firebase', 'heroku', 'digitalocean'],
+            'devops': ['docker', 'kubernetes', 'jenkins', 'gitlab', 'github actions', 'ansible', 'terraform', 'helm', 'argocd', 'prometheus', 'grafana', 'elk', 'ci/cd', 'gitops'],
+            'databases': ['mysql', 'postgresql', 'mongodb', 'redis', 'sqlite', 'oracle', 'sql server', 'dynamodb', 'cassandra', 'elasticsearch', 'snowflake', 'bigquery', 'redshift'],
+            'frontend': ['html', 'css', 'javascript', 'typescript', 'react', 'vue', 'angular', 'sass', 'less', 'webpack', 'vite', 'bootstrap', 'tailwind', 'material-ui', 'styled-components'],
+            'mobile': ['swift', 'kotlin', 'java', 'react native', 'flutter', 'xamarin', 'ionic', 'objective-c', 'android', 'ios', 'xcode', 'android studio'],
+            'data_science': ['pandas', 'numpy', 'scikit-learn', 'tensorflow', 'pytorch', 'keras', 'jupyter', 'matplotlib', 'seaborn', 'plotly', 'tableau', 'power bi', 'r', 'stata', 'spss'],
+            'big_data': ['apache spark', 'hadoop', 'kafka', 'airflow', 'dbt', 'databricks', 'snowflake', 'redshift', 'bigquery', 'hive', 'pig', 'storm', 'flink'],
+            'testing': ['junit', 'pytest', 'jest', 'cypress', 'selenium', 'testng', 'mocha', 'chai', 'enzyme', 'react testing library', 'espresso', 'xctest'],
+            'monitoring': ['prometheus', 'grafana', 'datadog', 'new relic', 'splunk', 'elk stack', 'jaeger', 'zipkin', 'pagerduty', 'sentry'],
+            'security': ['owasp', 'penetration testing', 'vulnerability assessment', 'encryption', 'oauth', 'jwt', 'ssl/tls', 'firewall', 'iam', 'security audit'],
+            'version_control': ['git', 'github', 'gitlab', 'bitbucket', 'svn', 'mercurial', 'perforce'],
+            'apis': ['rest', 'graphql', 'grpc', 'soap', 'api gateway', 'swagger', 'postman', 'insomnia', 'openapi'],
+            'methodologies': ['agile', 'scrum', 'kanban', 'lean', 'devops', 'tdd', 'bdd', 'ci/cd', 'microservices', 'mvp', 'design patterns']
         }
         self.stop_words = {
             'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by',

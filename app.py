@@ -23,6 +23,11 @@ def index():
     """Serve the main application page"""
     return render_template('index.html')
 
+@app.route('/training-info')
+def training_info():
+    """Serve the training data information page"""
+    return render_template('training_info.html')
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""

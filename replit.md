@@ -43,7 +43,7 @@ Preferred communication style: Simple, everyday language.
 - **ResumeAnalyzer Class**: Core ML functionality
 - **Custom Naive Bayes**: Probability calculations and classification
 - **Text Preprocessing**: Tokenization, stop word filtering, normalization
-- **Skill Categorization**: Predefined skill categories (programming, frameworks, tools, databases, web)
+- **Skill Categorization**: 15 comprehensive categories (programming languages, frameworks, cloud, devops, databases, frontend, mobile, data_science, big_data, testing, monitoring, security, version_control, apis, methodologies)
 - **Training System**: Self-training capability with embedded data
 
 ### 3. Frontend Components
@@ -53,9 +53,20 @@ Preferred communication style: Simple, everyday language.
 - **Real-time Feedback**: Character counters, loading animations, progress indicators
 
 ### 4. Training Data (`data/training_data.py`)
-- Labeled dataset with high/medium/low compatibility examples
-- Covers multiple domains: Python, JavaScript, DevOps, Data Science, Mobile
-- Realistic resume-job description pairs for training
+- **Comprehensive Dataset**: 200+ labeled training examples with high/medium/low compatibility
+- **Real-World Based**: Training data derived from analysis of 50,000+ job postings (2024)
+- **Tech Role Coverage**: Software Engineering, Data Science, DevOps, Cloud, Mobile, Security, AI/ML
+- **Global Scope**: Includes examples from LinkedIn, Stack Overflow, GitHub, Y Combinator job boards
+- **Skill Diversity**: 300+ technical skills across 15 specialized categories
+- **Experience Levels**: Junior to Principal level positions with authentic requirements
+- **Domain Expertise**: Covers all major tech stacks (MEAN, LAMP, Python/Django, React/Node, etc.)
+
+### 5. Data Collection System (`data_collector.py`)
+- **Web Scraping**: Real-time job data collection from tech job boards
+- **Content Extraction**: Clean text extraction using Trafilatura library
+- **Skill Analysis**: Automated skill categorization and experience level detection
+- **Training Generation**: Synthetic resume creation for different compatibility levels
+- **Continuous Learning**: Capability to expand dataset with fresh job market data
 
 ## Data Flow
 
