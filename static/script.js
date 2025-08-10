@@ -318,6 +318,9 @@ class CompatibilityAnalyzer {
         this.skillBreakdown.innerHTML = '';
 
         for (const [category, percentage] of Object.entries(skillMatches)) {
+            // Skip N/A entries - only show skills that have matches
+            if (percentage === 'N/A') continue;
+            
             const skillItem = document.createElement('div');
             skillItem.className = 'skill-item';
 

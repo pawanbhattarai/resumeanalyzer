@@ -259,13 +259,13 @@ class ResumeAnalyzer:
                 resume_category_skills = set(resume_skills.get(category, []))
                 job_category_skills = set(job_skills.get(category, []))
                 
+                # Only include categories that have skills in the job description
                 if job_category_skills:
                     match_percentage = len(resume_category_skills.intersection(job_category_skills)) / len(job_category_skills)
                     skill_matches[category.title()] = f"{int(match_percentage * 100)}%"
                     overall_skill_match += match_percentage
                     total_categories += 1
-                else:
-                    skill_matches[category.title()] = "N/A"
+                # Skip categories with no skills (don't add "N/A" entries)
             
             if total_categories > 0:
                 overall_skill_match /= total_categories
