@@ -1,7 +1,7 @@
 from flask import render_template, request, jsonify, redirect, url_for, flash, session
 from flask_login import login_required, current_user
-from models import User, AnalysisHistory
-from forms import AnalysisForm, ProfileForm, ChangePasswordForm
+from models import User, AnalysisHistory, SavedResume
+from forms import AnalysisForm, ProfileForm, ChangePasswordForm, SavedResumeForm
 from app import db
 from ml_engine import ResumeAnalyzer
 from datetime import datetime
@@ -180,8 +180,18 @@ def register_routes(app):
             obj=current_user
         )
         password_form = ChangePasswordForm()
+        resume_form = SavedResumeForm()
         
-        return render_template('profile.html', form=form, password_form=password_form)
+        # Get user's saved resumes
+        saved_resumes = SavedResume.query.filter_by(user_id=current_user.id)\
+                                        .order_by(SavedResume.is_default.desc(), SavedResume.updated_at.desc())\
+                                        .all()
+        
+        return render_template('profile.html', 
+                             form=form, 
+                             password_form=password_form,
+                             resume_form=resume_form,
+                             saved_resumes=saved_resumes)
 
     @app.route('/profile/update', methods=['POST'])
     @login_required
@@ -260,6 +270,9 @@ def register_routes(app):
             # Delete all analysis history first (due to foreign key constraint)
             AnalysisHistory.query.filter_by(user_id=user_id).delete()
             
+            # Delete all saved resumes
+            SavedResume.query.filter_by(user_id=user_id).delete()
+            
             # Delete the user account
             db.session.delete(current_user)
             db.session.commit()
@@ -271,6 +284,97 @@ def register_routes(app):
             db.session.rollback()
             flash(f'Error deleting account: {str(e)}', 'error')
             return jsonify({'status': 'error', 'message': str(e)}), 500
+
+    @app.route('/profile/save-resume', methods=['POST'])
+    @login_required
+    def save_resume():
+        """Save a new resume"""
+        form = SavedResumeForm()
+        
+        if form.validate_on_submit():
+            try:
+                # If setting as default, unset other defaults
+                if form.is_default.data:
+                    SavedResume.query.filter_by(user_id=current_user.id, is_default=True)\
+                                   .update({'is_default': False})
+                
+                resume = SavedResume(
+                    user_id=current_user.id,
+                    title=form.title.data.strip(),
+                    content=form.content.data.strip(),
+                    is_default=form.is_default.data
+                )
+                
+                db.session.add(resume)
+                db.session.commit()
+                
+                flash('Resume saved successfully!', 'success')
+                
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Error saving resume: {str(e)}', 'error')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'{getattr(form, field).label.text}: {error}', 'error')
+        
+        return redirect(url_for('profile'))
+
+    @app.route('/profile/edit-resume/<int:resume_id>', methods=['POST'])
+    @login_required
+    def edit_resume(resume_id):
+        """Edit an existing resume"""
+        resume = SavedResume.query.filter_by(id=resume_id, user_id=current_user.id).first_or_404()
+        
+        data = request.get_json()
+        
+        try:
+            resume.title = data.get('title', '').strip()
+            resume.content = data.get('content', '').strip()
+            
+            # Handle default setting
+            if data.get('is_default', False):
+                SavedResume.query.filter_by(user_id=current_user.id, is_default=True)\
+                                .update({'is_default': False})
+                resume.is_default = True
+            
+            db.session.commit()
+            return jsonify({'status': 'success', 'message': 'Resume updated successfully'})
+            
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+
+    @app.route('/profile/delete-resume/<int:resume_id>', methods=['POST'])
+    @login_required
+    def delete_resume(resume_id):
+        """Delete a saved resume"""
+        resume = SavedResume.query.filter_by(id=resume_id, user_id=current_user.id).first_or_404()
+        
+        try:
+            db.session.delete(resume)
+            db.session.commit()
+            return jsonify({'status': 'success', 'message': 'Resume deleted successfully'})
+            
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+
+    @app.route('/api/saved-resumes')
+    @login_required
+    def get_saved_resumes():
+        """Get user's saved resumes for analysis page"""
+        resumes = SavedResume.query.filter_by(user_id=current_user.id)\
+                                  .order_by(SavedResume.is_default.desc(), SavedResume.updated_at.desc())\
+                                  .all()
+        
+        return jsonify([{
+            'id': resume.id,
+            'title': resume.title,
+            'content': resume.content,
+            'is_default': resume.is_default,
+            'created_at': resume.created_at.isoformat()
+        } for resume in resumes])
 
     @app.route('/training-info')
     def training_info():

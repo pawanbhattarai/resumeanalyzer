@@ -20,6 +20,7 @@ class User(UserMixin, db.Model):
     
     # Relationships
     analysis_history = db.relationship('AnalysisHistory', backref='user', lazy=True, cascade='all, delete-orphan')
+    saved_resumes = db.relationship('SavedResume', backref='user', lazy=True, cascade='all, delete-orphan')
     
     def set_password(self, password):
         """Set password hash"""
@@ -87,6 +88,21 @@ class PasswordReset(db.Model):
     def is_valid(self):
         """Check if token is valid (not used and not expired)"""
         return not self.is_used and not self.is_expired()
+
+
+class SavedResume(db.Model):
+    __tablename__ = 'saved_resumes'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    is_default = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<SavedResume {self.id} - {self.title}>'
 
 
 class AnalysisHistory(db.Model):

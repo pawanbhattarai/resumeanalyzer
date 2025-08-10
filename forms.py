@@ -148,3 +148,15 @@ class ChangePasswordForm(FlaskForm):
         EqualTo('new_password', message='Passwords must match')
     ])
     submit = SubmitField('Change Password')
+
+class SavedResumeForm(FlaskForm):
+    title = StringField('Resume Title', validators=[
+        DataRequired(message='Please enter a title for your resume'),
+        Length(min=3, max=200, message='Title must be between 3 and 200 characters')
+    ])
+    content = TextAreaField('Resume Content', validators=[
+        DataRequired(message='Please enter your resume content'),
+        Length(min=50, message='Resume content must be at least 50 characters')
+    ])
+    is_default = BooleanField('Set as default resume')
+    submit = SubmitField('Save Resume')
