@@ -51,50 +51,41 @@
                 </div>
             </nav>
 
-            <!-- Main Content -->
-            <main class="main-content">
-                <!-- Welcome Section -->
-                <section class="welcome-section">
-                    <div class="welcome-card">
-                        <div class="welcome-content">
-                            <h1>
-                                Welcome back, {{ current_user.first_name }}!
-                            </h1>
-                            <p>
-                                Ready to analyze your resume compatibility?
-                                Track your progress and improve your job
-                                prospects.
-                            </p>
-                            <a
-                                href="{{ url_for('analyze') }}"
-                                class="action-btn primary"
-                            >
-                                <i class="fas fa-plus"></i>
-                                Start New Analysis
-                            </a>
-                        </div>
-                        <div class="welcome-stats">
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-chart-line"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <h3>{{ total_analyses }}</h3>
-                                    <p>Total Analyses</p>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-percentage"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <h3>{{ avg_score }}%</h3>
-                                    <p>Average Score</p>
-                                </div>
-                            </div>
-                        </div>
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    Welcome back, {{ current_user.first_name }}!
+                </h1>
+                <p class="subtitle">
+                    Ready to analyze your resume compatibility? Track your progress and improve your job prospects.
+                </p>
+                <div class="dashboard-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="stat-number">{{ total_analyses }}</span>
+                        <span class="stat-label">Total Analyses</span>
                     </div>
-                </section>
+                    <div class="stat-item">
+                        <i class="fas fa-percentage"></i>
+                        <span class="stat-number">{{ avg_score }}%</span>
+                        <span class="stat-label">Average Score</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Quick Actions Section -->
+            <section class="input-section">
+                <div class="quick-actions">
+                    <a href="{{ url_for('analyze') }}" class="analyze-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Start New Analysis</span>
+                    </a>
+                </div>
+            </section>
 
                 <!-- Recent Analyses -->
                 {% if recent_analyses %}
