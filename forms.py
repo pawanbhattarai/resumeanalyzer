@@ -51,6 +51,24 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
+class AnalysisForm(FlaskForm):
+    job_title = StringField('Job Title', validators=[
+        Length(max=200, message='Job title must be less than 200 characters')
+    ])
+    company_name = StringField('Company Name', validators=[
+        Length(max=200, message='Company name must be less than 200 characters')
+    ])
+    resume_text = TextAreaField('Resume Content', validators=[
+        DataRequired(message='Please paste your resume content'),
+        Length(min=50, message='Resume must be at least 50 characters long')
+    ])
+    job_description = TextAreaField('Job Description', validators=[
+        DataRequired(message='Please paste the job description'),
+        Length(min=50, message='Job description must be at least 50 characters long')
+    ])
+    save_analysis = BooleanField('Save this analysis to my history')
+    submit = SubmitField('Analyze Compatibility')
+
 class ForgotPasswordForm(FlaskForm):
     email = StringField('Email', validators=[
         DataRequired(), 

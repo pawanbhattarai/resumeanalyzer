@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title">Resume Analyzer</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('analyze') }}">New Analysis</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="results-container">
+            <h2><i class="fas fa-chart-bar"></i> Analysis Results</h2>
+            
+            <!-- Overall Score -->
+            <div class="score-section">
+                <div class="score-circle">
+                    <div class="score-value">{{ result.compatibility_score }}%</div>
+                    <div class="score-label">{{ result.compatibility_level }}</div>
+                </div>
+            </div>
+            
+            <!-- Skill Breakdown -->
+            <div class="skill-section">
+                <h3><i class="fas fa-cogs"></i> Skill Analysis</h3>
+                <div class="skill-breakdown">
+                    {% for category, percentage in result.skill_matches.items() %}
+                        {% if percentage != 'N/A' %}
+                        <div class="skill-item">
+                            <span class="skill-name">{{ category }}</span>
+                            <span class="skill-percentage">{{ percentage }}</span>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Recommendations -->
+            <div class="recommendations-section">
+                <h3><i class="fas fa-lightbulb"></i> Recommendations</h3>
+                <ul class="recommendations-list">
+                    {% for recommendation in result.recommendations %}
+                    <li>{{ recommendation }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- Actions -->
+            <div class="actions">
+                <a href="{{ url_for('analyze') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Analysis
+                </a>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-dashboard"></i> Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    .results-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .score-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .score-circle {
+        display: inline-block;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        color: white;
+        min-width: 150px;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .score-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+    
+    .score-label {
+        font-size: 1rem;
+        margin-top: 0.5rem;
+    }
+    
+    .skill-section, .recommendations-section {
+        margin-bottom: 2rem;
+    }
+    
+    .skill-breakdown {
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .skill-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 5px;
+    }
+    
+    .skill-name {
+        font-weight: 600;
+    }
+    
+    .skill-percentage {
+        font-weight: bold;
+        color: #28a745;
+    }
+    
+    .recommendations-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .recommendations-list li {
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        background: #e9ecef;
+        border-radius: 5px;
+        border-left: 4px solid #007bff;
+    }
+    
+    .actions {
+        text-align: center;
+        margin-top: 2rem;
+    }
+    
+    .actions .btn {
+        margin: 0 0.5rem;
+    }
+    </style>
+</body>
+</html>

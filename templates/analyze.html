@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyze Resume - Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title">Resume Analyzer</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <h2><i class="fas fa-search"></i> Analyze Resume</h2>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" class="analysis-form">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-group">
+                    {{ form.job_title.label(class="form-label") }}
+                    {{ form.job_title(class="form-control", placeholder="e.g., Senior Software Engineer") }}
+                    {% for error in form.job_title.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.company_name.label(class="form-label") }}
+                    {{ form.company_name(class="form-control", placeholder="e.g., Google, Microsoft") }}
+                    {% for error in form.company_name.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.resume_text.label(class="form-label") }}
+                    {{ form.resume_text(class="form-control", placeholder="Paste your resume content here...", rows="10") }}
+                    {% for error in form.resume_text.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.job_description.label(class="form-label") }}
+                    {{ form.job_description(class="form-control", placeholder="Paste the job description here...", rows="10") }}
+                    {% for error in form.job_description.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-check">
+                    {{ form.save_analysis() }}
+                    {{ form.save_analysis.label(class="form-check-label") }}
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-chart-line"></i> Analyze Compatibility
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
