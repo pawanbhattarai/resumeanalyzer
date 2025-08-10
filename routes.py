@@ -1,8 +1,8 @@
 from flask import render_template, request, jsonify, redirect, url_for, flash, session
 from flask_login import login_required, current_user
 from models import User, AnalysisHistory
-from app import db
 from forms import AnalysisForm
+from app import db
 from ml_engine import ResumeAnalyzer
 from datetime import datetime
 
