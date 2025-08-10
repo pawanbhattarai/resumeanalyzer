@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis History - Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title">Resume Analyzer</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('analyze') }}">New Analysis</a>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="history-container">
+            <h2><i class="fas fa-history"></i> Analysis History</h2>
+            
+            {% if analyses.items %}
+            <div class="history-list">
+                {% for analysis in analyses.items %}
+                <div class="history-item">
+                    <div class="history-header">
+                        <h3>{{ analysis.job_title or 'Untitled Position' }}</h3>
+                        <span class="history-date">{{ analysis.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    </div>
+                    <div class="history-details">
+                        <span class="company">{{ analysis.company_name or 'Unknown Company' }}</span>
+                        <span class="score">{{ analysis.compatibility_score }}% - {{ analysis.compatibility_level }}</span>
+                    </div>
+                    <div class="history-actions">
+                        <a href="{{ url_for('view_analysis', analysis_id=analysis.id) }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if analyses.pages > 1 %}
+            <div class="pagination">
+                {% if analyses.has_prev %}
+                <a href="{{ url_for('history', page=analyses.prev_num) }}">&laquo; Previous</a>
+                {% endif %}
+                
+                {% for page_num in analyses.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != analyses.page %}
+                        <a href="{{ url_for('history', page=page_num) }}">{{ page_num }}</a>
+                        {% else %}
+                        <span class="current">{{ page_num }}</span>
+                        {% endif %}
+                    {% else %}
+                    <span>…</span>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if analyses.has_next %}
+                <a href="{{ url_for('history', page=analyses.next_num) }}">Next &raquo;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>No Analyses Yet</h3>
+                <p>Start by analyzing your first resume-job match!</p>
+                <a href="{{ url_for('analyze') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Analysis
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <style>
+    .history-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 2rem;
+    }
+    
+    .history-item {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .history-header h3 {
+        margin: 0;
+        color: #333;
+    }
+    
+    .history-date {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .history-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .company {
+        color: #666;
+    }
+    
+    .score {
+        font-weight: bold;
+        color: #28a745;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+    
+    .pagination {
+        text-align: center;
+        margin-top: 2rem;
+    }
+    
+    .pagination a, .pagination .current {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        margin: 0 0.25rem;
+        border: 1px solid #ddd;
+        text-decoration: none;
+    }
+    
+    .pagination .current {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+    </style>
+</body>
+</html>
