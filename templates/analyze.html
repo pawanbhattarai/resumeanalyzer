@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,62 +38,125 @@
     </nav>
 
     <div class="container">
-        <div class="form-container">
-            <h2><i class="fas fa-search"></i> Analyze Resume</h2>
-            
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            
-            <form method="POST" class="analysis-form">
-                {{ form.hidden_tag() }}
-                
-                <div class="form-group">
-                    {{ form.job_title.label(class="form-label") }}
-                    {{ form.job_title(class="form-control", placeholder="e.g., Senior Software Engineer") }}
-                    {% for error in form.job_title.errors %}
-                        <div class="error-message">{{ error }}</div>
-                    {% endfor %}
+        <main class="main-content">
+            <section class="input-section">
+                <div class="analyze-header">
+                    <h2><i class="fas fa-search"></i> Analyze Resume</h2>
+                    <p class="analyze-subtitle">
+                        Compare your resume against job requirements and get personalized recommendations to improve your compatibility score.
+                    </p>
                 </div>
                 
-                <div class="form-group">
-                    {{ form.company_name.label(class="form-label") }}
-                    {{ form.company_name(class="form-control", placeholder="e.g., Google, Microsoft") }}
-                    {% for error in form.company_name.errors %}
-                        <div class="error-message">{{ error }}</div>
-                    {% endfor %}
-                </div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 
-                <div class="form-group">
-                    {{ form.resume_text.label(class="form-label") }}
-                    {{ form.resume_text(class="form-control", placeholder="Paste your resume content here...", rows="10") }}
-                    {% for error in form.resume_text.errors %}
-                        <div class="error-message">{{ error }}</div>
-                    {% endfor %}
-                </div>
-                
-                <div class="form-group">
-                    {{ form.job_description.label(class="form-label") }}
-                    {{ form.job_description(class="form-control", placeholder="Paste the job description here...", rows="10") }}
-                    {% for error in form.job_description.errors %}
-                        <div class="error-message">{{ error }}</div>
-                    {% endfor %}
-                </div>
-                
-                <div class="form-check">
-                    {{ form.save_analysis() }}
-                    {{ form.save_analysis.label(class="form-check-label") }}
-                </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-chart-line"></i> Analyze Compatibility
-                </button>
-            </form>
-        </div>
+                <form method="POST" class="form-section">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="job-info-grid">
+                        <div class="form-group">
+                            {{ form.job_title.label(class="form-label") }}
+                            {{ form.job_title(class="form-control", placeholder="e.g., Senior Software Engineer") }}
+                            {% for error in form.job_title.errors %}
+                                <div class="error-message">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.company_name.label(class="form-label") }}
+                            {{ form.company_name(class="form-control", placeholder="e.g., Google, Microsoft") }}
+                            {% for error in form.company_name.errors %}
+                                <div class="error-message">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="input-grid">
+                        <div class="input-card">
+                            <div class="input-header">
+                                <i class="fas fa-file-text"></i>
+                                <h3>Resume Text</h3>
+                            </div>
+                            {{ form.resume_text(class="input-textarea", placeholder="Paste your resume content here...\n\nInclude:\n• Work experience\n• Skills and technologies\n• Education\n• Projects and achievements") }}
+                            <div class="input-footer">
+                                <span class="input-tips">Tip: Include technical skills and specific achievements</span>
+                                <span class="char-count" id="resumeCharCount">0 characters</span>
+                            </div>
+                            {% for error in form.resume_text.errors %}
+                                <div class="error-message">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="input-card">
+                            <div class="input-header">
+                                <i class="fas fa-briefcase"></i>
+                                <h3>Job Description</h3>
+                            </div>
+                            {{ form.job_description(class="input-textarea", placeholder="Paste the job description here...\n\nInclude:\n• Required skills and qualifications\n• Job responsibilities\n• Experience requirements\n• Preferred technologies") }}
+                            <div class="input-footer">
+                                <span class="input-tips">Tip: Include the complete job posting for best results</span>
+                                <span class="char-count" id="jobCharCount">0 characters</span>
+                            </div>
+                            {% for error in form.job_description.errors %}
+                                <div class="error-message">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="analyze-section">
+                        <div class="form-check">
+                            {{ form.save_analysis() }}
+                            {{ form.save_analysis.label(class="form-check-label") }}
+                        </div>
+                        
+                        <button type="submit" class="analyze-btn">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Analyze Compatibility</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </main>
     </div>
+
+    <script>
+        // Character counters
+        function updateCharCount(textarea, countElement) {
+            const count = textarea.value.length;
+            countElement.textContent = `${count.toLocaleString()} characters`;
+        }
+
+        const resumeTextarea = document.querySelector('textarea[name="resume_text"]');
+        const jobTextarea = document.querySelector('textarea[name="job_description"]');
+        const resumeCounter = document.getElementById('resumeCharCount');
+        const jobCounter = document.getElementById('jobCharCount');
+
+        if (resumeTextarea && resumeCounter) {
+            resumeTextarea.addEventListener('input', () => updateCharCount(resumeTextarea, resumeCounter));
+            updateCharCount(resumeTextarea, resumeCounter);
+        }
+
+        if (jobTextarea && jobCounter) {
+            jobTextarea.addEventListener('input', () => updateCharCount(jobTextarea, jobCounter));
+            updateCharCount(jobTextarea, jobCounter);
+        }
+
+        // Auto-resize textareas
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        [resumeTextarea, jobTextarea].forEach(textarea => {
+            if (textarea) {
+                textarea.addEventListener('input', () => autoResize(textarea));
+            }
+        });
+    </script>
 </body>
 </html>
