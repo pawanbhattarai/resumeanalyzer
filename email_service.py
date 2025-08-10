@@ -1,7 +1,7 @@
 
 from flask import current_app, url_for, render_template_string
 from flask_mail import Mail, Message
-from models import User, EmailVerification, PasswordReset, db
+from app import db
 import os
 
 mail = Mail()
@@ -9,6 +9,7 @@ mail = Mail()
 def send_verification_email(user):
     """Send email verification to new user"""
     try:
+        from models import EmailVerification
         # Create verification token
         verification = EmailVerification(user.id)
         db.session.add(verification)
@@ -71,6 +72,7 @@ def send_verification_email(user):
 def send_password_reset_email(user):
     """Send password reset email"""
     try:
+        from models import PasswordReset
         # Create reset token
         reset_token = PasswordReset(user.id)
         db.session.add(reset_token)

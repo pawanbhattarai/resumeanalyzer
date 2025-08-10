@@ -1,11 +1,9 @@
-
-from flask_sqlalchemy import SQLAlchemy
+from app import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import secrets
 
-db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -13,7 +11,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     is_verified = db.Column(db.Boolean, default=False, nullable=False)
@@ -37,6 +35,7 @@ class User(UserMixin, db.Model):
     
     def __repr__(self):
         return f'<User {self.username}>'
+
 
 class EmailVerification(db.Model):
     __tablename__ = 'email_verifications'
@@ -63,6 +62,7 @@ class EmailVerification(db.Model):
         """Check if token is valid (not used and not expired)"""
         return not self.is_used and not self.is_expired()
 
+
 class PasswordReset(db.Model):
     __tablename__ = 'password_resets'
     
@@ -87,6 +87,7 @@ class PasswordReset(db.Model):
     def is_valid(self):
         """Check if token is valid (not used and not expired)"""
         return not self.is_used and not self.is_expired()
+
 
 class AnalysisHistory(db.Model):
     __tablename__ = 'analysis_history'
