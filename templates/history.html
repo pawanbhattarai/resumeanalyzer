@@ -5,17 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis History - Resume Analyzer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-container">
-            <h1 class="nav-title">Resume Analyzer</h1>
-            <div class="nav-links">
-                <a href="{{ url_for('dashboard') }}">Dashboard</a>
-                <a href="{{ url_for('analyze') }}">New Analysis</a>
-                <a href="{{ url_for('auth.logout') }}">Logout</a>
+        <div class="nav-content">
+            <div class="nav-brand">
+                <i class="fas fa-brain"></i>
+                <span>Resume Analyzer</span>
+            </div>
+            <div class="nav-menu">
+                <a href="{{ url_for('dashboard') }}" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('analyze') }}" class="nav-link">
+                    <i class="fas fa-search"></i>
+                    New Analysis
+                </a>
+                <a href="{{ url_for('history') }}" class="nav-link active">
+                    <i class="fas fa-history"></i>
+                    History
+                </a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        <i class="fas fa-user"></i>
+                        {{ current_user.first_name }}
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                            <i class="fas fa-user-cog"></i>
+                            Profile
+                        </a>
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
