@@ -303,6 +303,7 @@ class ResumeAnalyzer:
             return {
                 "compatibility_score": round(final_score, 2),
                 "compatibility_level": compatibility_level,
+                "skill_matches": skill_matches,
                 "detailed_analysis": {
                     "skill_matches": skill_matches,
                     "experience_match": f"{int(exp_match_score * 100)}%",
