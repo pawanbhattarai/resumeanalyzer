@@ -82,10 +82,29 @@
                     <div class="input-grid">
                         <div class="input-card">
                             <div class="input-header">
-                                <i class="fas fa-file-text"></i>
-                                <h3>Resume Text</h3>
+                                <div class="title-section">
+                                    <i class="fas fa-file-text"></i>
+                                    <h3>Resume Text</h3>
+                                </div>
+                                <div class="resume-options">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="useSavedResumeToggle">
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">Use saved resume</span>
+                                    </label>
+                                </div>
                             </div>
-                            {{ form.resume_text(class="input-textarea", placeholder="Paste your resume content here...\n\nInclude:\n• Work experience\n• Skills and technologies\n• Education\n• Projects and achievements") }}
+
+                            <div id="savedResumeSection" class="saved-resume-section" style="display: none;">
+                                <div class="form-group">
+                                    <label for="savedResumeSelector" class="form-label">Select Resume:</label>
+                                    <select id="savedResumeSelector" class="form-control">
+                                        <option value="">Choose a saved resume...</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {{ form.resume_text(class="input-textarea", id="resume_text", placeholder="Paste your resume content here...\n\nInclude:\n• Work experience\n• Skills and technologies\n• Education\n• Projects and achievements") }}
                             <div class="input-footer">
                                 <span class="input-tips">Tip: Include technical skills and specific achievements</span>
                                 <span class="char-count" id="resumeCharCount">0 characters</span>
@@ -160,15 +179,41 @@
                 textarea.addEventListener('input', () => autoResize(textarea));
             }
         });
-    </script>
-    <script>
-        // Load saved resumes on page load
-        document.addEventListener('DOMContentLoaded', function() {
+
+        // Toggle saved resume section
+        const useSavedResumeToggle = document.getElementById('useSavedResumeToggle');
+        const savedResumeSection = document.getElementById('savedResumeSection');
+        const savedResumeSelector = document.getElementById('savedResumeSelector');
+        const resumeTextInput = document.getElementById('resume_text');
+
+        if (useSavedResumeToggle && savedResumeSection && savedResumeSelector && resumeTextInput) {
+            useSavedResumeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    savedResumeSection.style.display = 'block';
+                    // Optionally, trigger loading of saved resumes if not already loaded
+                    if (savedResumeSelector.options.length === 1) { // Only "Choose a saved resume..." is present
+                        loadSavedResumes();
+                    }
+                } else {
+                    savedResumeSection.style.display = 'none';
+                    resumeTextInput.value = ''; // Clear the text area
+                    // Trigger input event to update character count if cleared
+                    const event = new Event('input', { bubbles: true });
+                    resumeTextInput.dispatchEvent(event);
+                }
+            });
+        }
+
+        // Function to load saved resumes (moved from DOMContentLoaded to be called on toggle)
+        function loadSavedResumes() {
             fetch('/api/saved-resumes')
                 .then(response => response.json())
                 .then(resumes => {
                     const selector = document.getElementById('savedResumeSelector');
-                    const resumeTextarea = document.getElementById('resume_text') || document.querySelector('textarea[name="resume_text"]');
+                    const resumeTextarea = document.getElementById('resume_text');
+
+                    // Clear existing options except the default one
+                    selector.innerHTML = '<option value="">Choose a saved resume...</option>';
 
                     resumes.forEach(resume => {
                         const option = document.createElement('option');
@@ -176,8 +221,8 @@
                         option.textContent = resume.title + (resume.is_default ? ' (Default)' : '');
                         selector.appendChild(option);
 
-                        // Auto-select default resume
-                        if (resume.is_default && resumeTextarea && !resumeTextarea.value.trim()) {
+                        // Auto-select default resume if toggle is checked and resume textarea is empty
+                        if (resume.is_default && resumeTextarea && !resumeTextarea.value.trim() && useSavedResumeToggle.checked) {
                             resumeTextarea.value = resume.content;
                             selector.value = resume.id;
 
@@ -198,12 +243,24 @@
                                 const event = new Event('input', { bubbles: true });
                                 resumeTextarea.dispatchEvent(event);
                             }
+                        } else {
+                            // If "Choose a saved resume..." is selected, clear the textarea
+                            resumeTextarea.value = '';
+                            const event = new Event('input', { bubbles: true });
+                            resumeTextarea.dispatchEvent(event);
                         }
                     });
                 })
                 .catch(error => {
                     console.error('Error loading saved resumes:', error);
                 });
+        }
+
+        // Initial load if the toggle is checked on page load (e.g., due to server-side rendering or state)
+        document.addEventListener('DOMContentLoaded', function() {
+            if (useSavedResumeToggle.checked) {
+                loadSavedResumes();
+            }
         });
     </script>
 </body>
