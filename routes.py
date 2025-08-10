@@ -1,7 +1,7 @@
 from flask import render_template, request, jsonify, redirect, url_for, flash, session
 from flask_login import login_required, current_user
 from models import User, AnalysisHistory
-from forms import AnalysisForm
+from forms import AnalysisForm, ProfileForm, ChangePasswordForm
 from app import db
 from ml_engine import ResumeAnalyzer
 from datetime import datetime
@@ -169,6 +169,108 @@ def register_routes(app):
             'status': 'healthy',
             'timestamp': datetime.utcnow().isoformat()
         })
+
+    @app.route('/profile')
+    @login_required
+    def profile():
+        """User profile management page"""
+        form = ProfileForm(
+            original_username=current_user.username,
+            original_email=current_user.email,
+            obj=current_user
+        )
+        password_form = ChangePasswordForm()
+        
+        return render_template('profile.html', form=form, password_form=password_form)
+
+    @app.route('/profile/update', methods=['POST'])
+    @login_required
+    def update_profile():
+        """Update user profile information"""
+        form = ProfileForm(
+            original_username=current_user.username,
+            original_email=current_user.email
+        )
+        
+        if form.validate_on_submit():
+            try:
+                current_user.first_name = form.first_name.data.strip()
+                current_user.last_name = form.last_name.data.strip()
+                current_user.username = form.username.data.lower().strip()
+                current_user.email = form.email.data.lower().strip()
+                
+                db.session.commit()
+                flash('Profile updated successfully!', 'success')
+                
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Error updating profile: {str(e)}', 'error')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'{getattr(form, field).label.text}: {error}', 'error')
+        
+        return redirect(url_for('profile'))
+
+    @app.route('/profile/change-password', methods=['POST'])
+    @login_required
+    def change_password():
+        """Change user password"""
+        form = ChangePasswordForm()
+        
+        if form.validate_on_submit():
+            if current_user.check_password(form.current_password.data):
+                try:
+                    current_user.set_password(form.new_password.data)
+                    db.session.commit()
+                    flash('Password changed successfully!', 'success')
+                except Exception as e:
+                    db.session.rollback()
+                    flash(f'Error changing password: {str(e)}', 'error')
+            else:
+                flash('Current password is incorrect.', 'error')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'{getattr(form, field).label.text}: {error}', 'error')
+        
+        return redirect(url_for('profile'))
+
+    @app.route('/profile/delete-history', methods=['POST'])
+    @login_required
+    def delete_analysis_history():
+        """Delete all user's analysis history"""
+        try:
+            AnalysisHistory.query.filter_by(user_id=current_user.id).delete()
+            db.session.commit()
+            flash('All analysis history deleted successfully.', 'success')
+            return jsonify({'status': 'success'})
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error deleting history: {str(e)}', 'error')
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+
+    @app.route('/profile/delete-account', methods=['POST'])
+    @login_required
+    def delete_account():
+        """Delete user account and all associated data"""
+        try:
+            user_id = current_user.id
+            
+            # Delete all analysis history first (due to foreign key constraint)
+            AnalysisHistory.query.filter_by(user_id=user_id).delete()
+            
+            # Delete the user account
+            db.session.delete(current_user)
+            db.session.commit()
+            
+            flash('Account deleted successfully.', 'info')
+            return jsonify({'status': 'success'})
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error deleting account: {str(e)}', 'error')
+            return jsonify({'status': 'error', 'message': str(e)}), 500
 
     @app.route('/training-info')
     def training_info():

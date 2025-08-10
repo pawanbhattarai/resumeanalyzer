@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Management - Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="brand-text">Resume Analyzer</span>
+                </div>
+                <div class="nav-auth">
+                    <a href="{{ url_for('dashboard') }}" class="nav-btn login-btn">
+                        <i class="fas fa-dashboard"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" class="nav-btn register-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-user-cog"></i>
+                    Profile Management
+                </h1>
+                <p class="subtitle">Manage your account information and preferences</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <i class="fas fa-info-circle"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="profile-section">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2>{{ current_user.get_full_name() }}</h2>
+                        <p class="profile-email">{{ current_user.email }}</p>
+                        <p class="profile-joined">Member since {{ current_user.created_at.strftime('%B %Y') }}</p>
+                    </div>
+                </div>
+
+                <div class="profile-tabs">
+                    <button class="tab-btn active" onclick="switchTab('personal')">
+                        <i class="fas fa-user"></i> Personal Information
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('security')">
+                        <i class="fas fa-shield-alt"></i> Security
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('preferences')">
+                        <i class="fas fa-cog"></i> Preferences
+                    </button>
+                    <button class="tab-btn danger" onclick="switchTab('danger')">
+                        <i class="fas fa-exclamation-triangle"></i> Danger Zone
+                    </button>
+                </div>
+
+                <!-- Personal Information Tab -->
+                <div id="personal-tab" class="tab-content active">
+                    <div class="form-card">
+                        <h3><i class="fas fa-user-edit"></i> Update Personal Information</h3>
+                        <form method="POST" action="{{ url_for('update_profile') }}" class="profile-form">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    {{ form.first_name.label(class="form-label") }}
+                                    {{ form.first_name(class="form-control") }}
+                                    {% if form.first_name.errors %}
+                                        <div class="form-error">
+                                            {% for error in form.first_name.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.last_name.label(class="form-label") }}
+                                    {{ form.last_name(class="form-control") }}
+                                    {% if form.last_name.errors %}
+                                        <div class="form-error">
+                                            {% for error in form.last_name.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    {{ form.username.label(class="form-label") }}
+                                    {{ form.username(class="form-control") }}
+                                    {% if form.username.errors %}
+                                        <div class="form-error">
+                                            {% for error in form.username.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.email.label(class="form-label") }}
+                                    {{ form.email(class="form-control") }}
+                                    {% if form.email.errors %}
+                                        <div class="form-error">
+                                            {% for error in form.email.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="action-btn primary">
+                                    <i class="fas fa-save"></i> Update Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Security Tab -->
+                <div id="security-tab" class="tab-content">
+                    <div class="form-card">
+                        <h3><i class="fas fa-key"></i> Change Password</h3>
+                        <form method="POST" action="{{ url_for('change_password') }}" class="profile-form">
+                            {{ password_form.hidden_tag() }}
+                            
+                            <div class="form-group">
+                                {{ password_form.current_password.label(class="form-label") }}
+                                {{ password_form.current_password(class="form-control") }}
+                                {% if password_form.current_password.errors %}
+                                    <div class="form-error">
+                                        {% for error in password_form.current_password.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    {{ password_form.new_password.label(class="form-label") }}
+                                    {{ password_form.new_password(class="form-control") }}
+                                    {% if password_form.new_password.errors %}
+                                        <div class="form-error">
+                                            {% for error in password_form.new_password.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    {{ password_form.confirm_password.label(class="form-label") }}
+                                    {{ password_form.confirm_password(class="form-control") }}
+                                    {% if password_form.confirm_password.errors %}
+                                        <div class="form-error">
+                                            {% for error in password_form.confirm_password.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="action-btn primary">
+                                    <i class="fas fa-shield-alt"></i> Change Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="form-card">
+                        <h3><i class="fas fa-history"></i> Account Activity</h3>
+                        <div class="activity-info">
+                            <div class="activity-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>Account created: {{ current_user.created_at.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                            </div>
+                            {% if current_user.last_login %}
+                            <div class="activity-item">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Last login: {{ current_user.last_login.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="activity-item">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>Total analyses: {{ current_user.analysis_history|length }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Tab -->
+                <div id="preferences-tab" class="tab-content">
+                    <div class="form-card">
+                        <h3><i class="fas fa-sliders-h"></i> Analysis Preferences</h3>
+                        <div class="preferences-grid">
+                            <div class="preference-item">
+                                <label class="preference-label">
+                                    <input type="checkbox" class="preference-checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Save analyses to history by default
+                                </label>
+                                <p class="preference-desc">Automatically save your resume analyses for future reference</p>
+                            </div>
+                            <div class="preference-item">
+                                <label class="preference-label">
+                                    <input type="checkbox" class="preference-checkbox">
+                                    <span class="checkmark"></span>
+                                    Email analysis results
+                                </label>
+                                <p class="preference-desc">Receive analysis results via email</p>
+                            </div>
+                            <div class="preference-item">
+                                <label class="preference-label">
+                                    <input type="checkbox" class="preference-checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Show improvement suggestions
+                                </label>
+                                <p class="preference-desc">Display detailed recommendations for resume improvement</p>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="action-btn primary">
+                                <i class="fas fa-save"></i> Save Preferences
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danger Zone Tab -->
+                <div id="danger-tab" class="tab-content">
+                    <div class="form-card danger-zone">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                        <div class="danger-actions">
+                            <div class="danger-item">
+                                <div class="danger-info">
+                                    <h4>Delete All Analysis History</h4>
+                                    <p>Permanently delete all your saved resume analyses. This action cannot be undone.</p>
+                                </div>
+                                <button type="button" class="action-btn danger" onclick="confirmDeleteHistory()">
+                                    <i class="fas fa-trash"></i> Delete History
+                                </button>
+                            </div>
+                            <div class="danger-item">
+                                <div class="danger-info">
+                                    <h4>Delete Account</h4>
+                                    <p>Permanently delete your account and all associated data. This action cannot be undone.</p>
+                                </div>
+                                <button type="button" class="action-btn danger" onclick="confirmDeleteAccount()">
+                                    <i class="fas fa-user-times"></i> Delete Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Resume Analyzer. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Confirm Action</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">Are you sure you want to proceed?</p>
+                <div class="modal-input hidden">
+                    <label for="confirm-text">Type "DELETE" to confirm:</label>
+                    <input type="text" id="confirm-text" placeholder="DELETE">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="closeModal()">Cancel</button>
+                <button class="action-btn danger" id="confirm-btn" onclick="executeDelete()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        let deleteAction = '';
+
+        function confirmDeleteHistory() {
+            deleteAction = 'history';
+            document.getElementById('modal-title').textContent = 'Delete Analysis History';
+            document.getElementById('modal-message').textContent = 'Are you sure you want to delete all your analysis history? This action cannot be undone.';
+            document.querySelector('.modal-input').classList.add('hidden');
+            document.getElementById('delete-modal').classList.remove('hidden');
+        }
+
+        function confirmDeleteAccount() {
+            deleteAction = 'account';
+            document.getElementById('modal-title').textContent = 'Delete Account';
+            document.getElementById('modal-message').textContent = 'Are you sure you want to permanently delete your account? This will delete all your data and cannot be undone.';
+            document.querySelector('.modal-input').classList.remove('hidden');
+            document.getElementById('delete-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('delete-modal').classList.add('hidden');
+            document.getElementById('confirm-text').value = '';
+            deleteAction = '';
+        }
+
+        function executeDelete() {
+            if (deleteAction === 'account') {
+                const confirmText = document.getElementById('confirm-text').value;
+                if (confirmText !== 'DELETE') {
+                    alert('Please type "DELETE" to confirm account deletion.');
+                    return;
+                }
+            }
+
+            if (deleteAction === 'history') {
+                fetch('{{ url_for("delete_analysis_history") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    }
+                });
+            } else if (deleteAction === 'account') {
+                fetch('{{ url_for("delete_account") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = '{{ url_for("index") }}';
+                    }
+                });
+            }
+
+            closeModal();
+        }
+
+        // Flash message auto-hide
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

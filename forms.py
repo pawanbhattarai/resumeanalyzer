@@ -100,3 +100,51 @@ class AnalysisForm(FlaskForm):
     ])
     save_analysis = BooleanField('Save this analysis to my history')
     submit = SubmitField('Analyze Compatibility')
+
+class ProfileForm(FlaskForm):
+    first_name = StringField('First Name', validators=[
+        DataRequired(), 
+        Length(min=2, max=50, message='First name must be between 2 and 50 characters')
+    ])
+    last_name = StringField('Last Name', validators=[
+        DataRequired(), 
+        Length(min=2, max=50, message='Last name must be between 2 and 50 characters')
+    ])
+    username = StringField('Username', validators=[
+        DataRequired(), 
+        Length(min=4, max=20, message='Username must be between 4 and 20 characters')
+    ])
+    email = StringField('Email', validators=[
+        DataRequired(), 
+        Email(message='Please enter a valid email address')
+    ])
+    submit = SubmitField('Update Profile')
+    
+    def __init__(self, original_username=None, original_email=None, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.original_username = original_username
+        self.original_email = original_email
+    
+    def validate_username(self, username):
+        if username.data != self.original_username:
+            user = User.query.filter_by(username=username.data).first()
+            if user:
+                raise ValidationError('Username already taken. Please choose a different one.')
+    
+    def validate_email(self, email):
+        if email.data != self.original_email:
+            user = User.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError('Email already registered. Please use a different email.')
+
+class ChangePasswordForm(FlaskForm):
+    current_password = PasswordField('Current Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[
+        DataRequired(), 
+        Length(min=8, message='Password must be at least 8 characters long')
+    ])
+    confirm_password = PasswordField('Confirm New Password', validators=[
+        DataRequired(), 
+        EqualTo('new_password', message='Passwords must match')
+    ])
+    submit = SubmitField('Change Password')
