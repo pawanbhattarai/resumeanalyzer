@@ -64,39 +64,167 @@ Database (Storage)
   - Set default resume
   - Delete account option
 
-## 🧠 How the Machine Learning Model Works
+## 🧠 How the Custom Machine Learning Engine Works
+
+### Custom Implementation Philosophy
+Our system implements machine learning **from scratch** without external ML libraries like scikit-learn or TensorFlow. This provides:
+- **Full Control**: Complete understanding of every algorithm step
+- **No Dependencies**: Lightweight deployment without heavy ML frameworks  
+- **Educational Value**: Transparent algorithms you can inspect and understand
+- **Custom Features**: Tailored specifically for resume-job matching
 
 ### Training Phase (Happens when system starts)
 
-1. **Training Data Collection**:
-   - The system has 4,926 real examples from LinkedIn, Indeed, and GitHub
-   - Each example contains: a resume, job description, and compatibility label (high/medium/low)
+**1. Authentic Training Data Loading:**
+```python
+# From data/real_training_data.py - 4,926 real examples
+REAL_TRAINING_DATA = [
+    ('Mid Information Technology with 4 years of experience in python, aws, docker...',
+     'Seeking Senior Python Developer with AWS experience...',
+     "high"),
+    # ... 4,925 more real examples
+]
+```
 
-2. **Text Processing**:
-   - Converts all text to lowercase
-   - Removes punctuation and common words (like "the", "and", "is")
-   - Breaks text into individual words (tokens)
+**2. Custom Text Preprocessing:**
+```python
+def preprocess_text(text):
+    # Convert to lowercase
+    text = text.lower()
+    
+    # Remove punctuation with regex
+    text = re.sub(r'[^\w\s]', ' ', text)
+    
+    # Tokenize and filter stop words
+    tokens = text.split()
+    filtered_tokens = [token for token in tokens 
+                      if token not in stop_words and len(token) > 2]
+    
+    return filtered_tokens
 
-3. **Skill Categorization**:
-   - Groups skills into 15 categories:
-     - Programming languages (Python, Java, JavaScript)
-     - Frameworks (React, Django, Spring)
-     - Cloud platforms (AWS, Azure, Google Cloud)
-     - DevOps tools (Docker, Kubernetes)
-     - Databases (MySQL, MongoDB)
-     - And 10 more categories...
+# Example:
+# Input: "I'm a Senior Python Developer with 5+ years of AWS experience!"
+# Output: ["senior", "python", "developer", "years", "aws", "experience"]
+```
 
-4. **Model Training (Naive Bayes Algorithm)**:
-   - Learns probability patterns from training data
-   - Calculates: "If I see word X, what's the probability of high/medium/low compatibility?"
-   - Creates a "vocabulary" of important words and their importance
+**3. Vocabulary Building:**
+```python
+def train_model(training_data):
+    class_counts = Counter()  # Count of each compatibility class
+    word_class_counts = defaultdict(Counter)  # Word counts per class
+    vocabulary = set()  # All unique words
+    
+    for resume, job_desc, compatibility in training_data:
+        combined_text = resume + " " + job_desc
+        tokens = preprocess_text(combined_text)
+        
+        class_counts[compatibility] += 1
+        vocabulary.update(tokens)
+        
+        # Count each word in each class
+        for token in tokens:
+            word_class_counts[compatibility][token] += 1
+```
+
+**4. Probability Calculation with Laplace Smoothing:**
+```python
+# Calculate class probabilities
+total_docs = sum(class_counts.values())
+class_probs = {cls: count / total_docs for cls, count in class_counts.items()}
+
+# Calculate word probabilities with Laplace smoothing
+vocab_size = len(vocabulary)
+word_probs = {}
+
+for cls in class_counts:
+    word_probs[cls] = {}
+    total_words = sum(word_class_counts[cls].values())
+    
+    for word in vocabulary:
+        word_count = word_class_counts[cls][word]
+        # Laplace smoothing: (word_count + 1) / (total_words + vocab_size)
+        word_probs[cls][word] = (word_count + 1) / (total_words + vocab_size)
+```
 
 ### Prediction Phase (When user clicks "Analyze")
 
-1. **Text Preprocessing**: Same cleaning process as training
-2. **Feature Extraction**: Identifies skills and experience level
-3. **Probability Calculation**: Uses trained model to predict compatibility class
-4. **Score Generation**: Combines multiple factors for final percentage
+**1. Multi-Factor Score Calculation:**
+```python
+def analyze_compatibility(resume, job_description):
+    # Factor 1: Naive Bayes Prediction (40% weight)
+    predicted_class, class_probabilities = predict_compatibility_class(resume, job_description)
+    base_score = class_probabilities.get('high', 0) * 0.8 + \
+                class_probabilities.get('medium', 0) * 0.5 + \
+                class_probabilities.get('low', 0) * 0.2
+    
+    # Factor 2: Skill Matching (35% weight)
+    resume_skills = extract_skills(resume)
+    job_skills = extract_skills(job_description)
+    skill_match_score = calculate_skill_overlap(resume_skills, job_skills)
+    
+    # Factor 3: Jaccard Text Similarity (15% weight)
+    text_similarity = calculate_jaccard_similarity(resume, job_description)
+    
+    # Factor 4: Experience Level Match (10% weight)
+    resume_exp = extract_experience_level(resume)
+    job_exp = extract_experience_level(job_description)
+    exp_match_score = 1.0 if resume_exp == job_exp else 0.5
+    
+    # Combine all factors
+    final_score = (base_score * 0.4 + 
+                  skill_match_score * 0.35 + 
+                  text_similarity * 0.15 + 
+                  exp_match_score * 0.1)
+    
+    return min(final_score, 1.0)  # Cap at 100%
+```
+
+**2. Custom Naive Bayes Implementation:**
+```python
+def predict_compatibility_class(resume, job_description):
+    combined_text = resume + " " + job_description
+    tokens = preprocess_text(combined_text)
+    
+    class_scores = {}
+    
+    for cls in class_probs:
+        # Start with log of class probability
+        score = math.log(class_probs[cls])
+        
+        # Add log probabilities for each word
+        for token in tokens:
+            if token in vocabulary:
+                score += math.log(word_probs[cls][token])
+        
+        class_scores[cls] = score
+    
+    # Convert back to probabilities
+    max_score = max(class_scores.values())
+    exp_scores = {cls: math.exp(score - max_score) for cls, score in class_scores.items()}
+    total_exp = sum(exp_scores.values())
+    probabilities = {cls: exp_score / total_exp for cls, exp_score in exp_scores.items()}
+    
+    predicted_class = max(class_scores, key=class_scores.get)
+    return predicted_class, probabilities
+```
+
+### Why Custom Implementation?
+
+**Mathematical Transparency:**
+- Every probability calculation is visible and explainable
+- No "black box" algorithms - you can trace every decision
+- Custom feature engineering for resume-specific patterns
+
+**Performance Benefits:**  
+- Lightweight: No heavy ML frameworks (TensorFlow = 500MB+, our engine = <1MB)
+- Fast training: Optimized for our specific use case
+- Instant predictions: No external API calls or model loading delays
+
+**Domain-Specific Optimizations:**
+- 15 custom skill categories tailored for tech jobs
+- Experience level extraction using regex patterns
+- Resume-specific text preprocessing (removing common resume words)
+- Multi-factor scoring that combines ML with rule-based logic
 
 ## 🔄 What Happens When You Click "Analyze"
 
@@ -124,27 +252,218 @@ Extract tokens: ["5", "years", "experience", "python", "aws"]
 
 ### Step 3: Feature Extraction
 
-**A. Skill Detection:**
-- Searches for keywords in 15 skill categories
-- Example: "python" → Programming category, "aws" → Cloud category
+**A. Skill Detection Algorithm:**
+
+The system searches through 15 predefined skill categories:
+
+```python
+skill_categories = {
+    'programming': ['python', 'java', 'javascript', 'typescript', 'c++', 'go', 'rust'],
+    'frameworks': ['react', 'angular', 'django', 'flask', 'spring', 'express'],
+    'cloud': ['aws', 'azure', 'gcp', 'lambda', 'ec2', 's3', 'kubernetes'],
+    'databases': ['mysql', 'postgresql', 'mongodb', 'redis', 'sqlite'],
+    # ... and 11 more categories
+}
+
+def extract_skills(text):
+    tokens = preprocess_text(text)  # Clean and tokenize
+    found_skills = {}
+    
+    for category, skills in skill_categories.items():
+        for skill in skills:
+            if skill in tokens:
+                found_skills[category].append(skill)
+    
+    return found_skills
+```
+
+**Real Example:**
+```
+Input: "I'm a senior Python developer with 5 years of AWS and Docker experience"
+Tokens: ["senior", "python", "developer", "5", "years", "aws", "docker", "experience"]
+
+Skill Detection Result:
+- Programming: ["python"]
+- Cloud: ["aws"] 
+- DevOps: ["docker"]
+- Other categories: [] (empty)
+```
 
 **B. Experience Level Detection:**
-- Looks for patterns like "5 years", "senior", "junior"
-- Classifies as: Junior (0-2 years), Mid (2-5 years), Senior (5+ years)
 
-**C. Text Similarity:**
-- Compares common words between resume and job description
-- Uses Jaccard similarity: (shared words) / (total unique words)
+```python
+def extract_experience_level(text):
+    text = text.lower()
+    
+    # Pattern matching for years
+    year_patterns = [
+        r'(\d+)\+?\s*years?\s*(?:of\s*)?(?:experience|exp)',
+        r'(\d+)\+?\s*yrs?\s*(?:of\s*)?(?:experience|exp)'
+    ]
+    
+    years = 0
+    for pattern in year_patterns:
+        matches = re.findall(pattern, text)
+        if matches:
+            years = max(years, int(matches[0]))
+    
+    # Keyword-based detection
+    if 'senior' in text or 'lead' in text or years >= 5:
+        return 'senior'
+    elif 'mid' in text or years >= 2:
+        return 'mid'
+    else:
+        return 'junior'
+```
+
+**C. Skill Matching Percentage:**
+
+```python
+def calculate_skill_matches(resume_skills, job_skills):
+    skill_matches = {}
+    
+    for category in skill_categories.keys():
+        resume_category_skills = set(resume_skills.get(category, []))
+        job_category_skills = set(job_skills.get(category, []))
+        
+        if job_category_skills:  # Only if job requires skills in this category
+            match_percentage = len(resume_category_skills.intersection(job_category_skills)) / len(job_category_skills)
+            skill_matches[category] = f"{int(match_percentage * 100)}%"
+    
+    return skill_matches
+```
+
+**Real Skill Matching Example:**
+```
+Resume Skills:
+- Programming: ["python", "javascript"]  
+- Cloud: ["aws"]
+- Frameworks: ["react", "django"]
+
+Job Requirements:
+- Programming: ["python", "java"]
+- Cloud: ["aws", "azure"] 
+- Frameworks: ["react"]
+
+Skill Match Calculation:
+- Programming: intersection["python"] / required["python", "java"] = 1/2 = 50%
+- Cloud: intersection["aws"] / required["aws", "azure"] = 1/2 = 50%  
+- Frameworks: intersection["react"] / required["react"] = 1/1 = 100%
+
+Overall Skill Match: (50% + 50% + 100%) / 3 = 66.7%
+```
 
 ### Step 4: Machine Learning Prediction
 
-**Naive Bayes Calculation:**
+**Custom Naive Bayes Algorithm:**
+
+Our system uses a custom-built Naive Bayes classifier (no external ML libraries) that works on probability principles:
+
+```python
+# Training Phase (happens when system starts)
+def train_model(training_data):
+    for resume, job_desc, compatibility_label in training_data:
+        combined_text = resume + " " + job_desc
+        tokens = preprocess_text(combined_text)
+        
+        # Count how often each word appears in each class
+        for token in tokens:
+            word_counts[compatibility_label][token] += 1
+        
+        class_counts[compatibility_label] += 1
 ```
-For each compatibility class (high, medium, low):
-    Start with base probability of that class
-    For each word in the text:
-        Multiply by probability of seeing that word in that class
+
+**Prediction Phase (when you click analyze):**
+```python
+# For each compatibility class (high, medium, low)
+def predict_compatibility(resume, job_desc):
+    combined_text = resume + " " + job_desc
+    tokens = preprocess_text(combined_text)
     
+    for each_class in ['high', 'medium', 'low']:
+        # Start with base probability of this class
+        score = log(class_probability[each_class])
+        
+        # For each word in the input
+        for token in tokens:
+            # Add log probability of seeing this word in this class
+            score += log(word_probability[each_class][token])
+        
+        class_scores[each_class] = score
+    
+    # Pick class with highest score
+    return max(class_scores)
+```
+
+**Real Example:**
+```
+Input: "Python developer with 5 years AWS experience"
+Tokens: ["python", "developer", "years", "aws", "experience"]
+
+High Class Score:
+- Base probability: log(0.4) = -0.916
+- P("python"|high): log(0.8) = -0.223  
+- P("developer"|high): log(0.7) = -0.357
+- P("years"|high): log(0.6) = -0.511
+- P("aws"|high): log(0.9) = -0.105
+- P("experience"|high): log(0.8) = -0.223
+Total Score: -0.916 + (-0.223) + (-0.357) + (-0.511) + (-0.105) + (-0.223) = -2.335
+
+Medium Class Score: -3.127
+Low Class Score: -4.892
+
+Result: HIGH compatibility (highest score)
+```
+
+**Laplace Smoothing:**
+To handle words not seen during training:
+```python
+# Instead of probability = word_count / total_words
+# We use: probability = (word_count + 1) / (total_words + vocabulary_size)
+# This prevents zero probabilities that would break the calculation
+```
+
+### Step 4.5: Jaccard Similarity Calculation
+
+**Jaccard Similarity Algorithm:**
+
+This measures how similar two texts are by comparing their word overlap:
+
+```python
+def calculate_jaccard_similarity(text1, text2):
+    # Convert texts to sets of unique words
+    tokens1 = set(preprocess_text(text1))
+    tokens2 = set(preprocess_text(text2))
+    
+    # Find intersection (shared words) and union (all unique words)
+    intersection = tokens1.intersection(tokens2)
+    union = tokens1.union(tokens2)
+    
+    # Jaccard = |intersection| / |union|
+    return len(intersection) / len(union)
+```
+
+**Real Example:**
+```
+Resume: "Python developer with React experience and AWS skills"
+Job Description: "Seeking Python engineer with AWS and Docker expertise"
+
+After preprocessing:
+Resume tokens: {"python", "developer", "react", "experience", "aws", "skills"}
+Job tokens: {"python", "engineer", "aws", "docker", "expertise"}
+
+Intersection (shared): {"python", "aws"} = 2 words
+Union (all unique): {"python", "developer", "react", "experience", "aws", "skills", "engineer", "docker", "expertise"} = 9 words
+
+Jaccard Similarity = 2/9 = 0.22 = 22%
+```
+
+**Why Jaccard Similarity Matters:**
+- Measures overall text overlap beyond just skills
+- Catches context and terminology alignment
+- Helps identify if candidate uses similar language to job posting
+- Contributes 15% to final compatibility score
+
 Pick the class with highest probability
 ```
 
