@@ -2454,6 +2454,7 @@ input, textarea, select {
     z-index: 1001;
     position: relative;
     order: 3;
+    margin-left: auto;
 }
 
 .hamburger span {

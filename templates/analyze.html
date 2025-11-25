@@ -17,7 +17,12 @@
                 <i class="fas fa-file-contract"></i>
                 <span>ResumeMatch AI</span>
             </div>
-            <div class="nav-links">
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-menu" id="navMenu">
                 <a href="{{ url_for('dashboard') }}" class="nav-link">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
@@ -157,6 +162,25 @@
     </div>
 
     <script>
+        // Hamburger menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            });
+        }
+
         // Character counters
         function updateCharCount(textarea, countElement) {
             const count = textarea.value.length;
