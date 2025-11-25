@@ -16,10 +16,15 @@
                 <i class="fas fa-file-contract"></i>
                 <span>ResumeMatch AI</span>
             </div>
-            <div class="nav-links">
-                <a href="#home" class="nav-link active">Home</a>
-                <a href="#how-it-works" class="nav-link">How It Works</a>
-                <a href="#analyze" class="nav-link">Analyze</a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="#home" class="nav-link active"><i class="fas fa-home"></i><span>Home</span></a>
+                <a href="#how-it-works" class="nav-link"><i class="fas fa-cogs"></i><span>How It Works</span></a>
+                <a href="#analyze" class="nav-link"><i class="fas fa-chart-line"></i><span>Analyze</span></a>
                 <a href="{{ url_for('auth.login') }}" class="nav-btn login-btn">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </a>
@@ -28,6 +33,7 @@
                 </a>
             </div>
         </div>
+        <div class="nav-overlay" id="navOverlay"></div>
     </nav>
 
     <!-- Hero Section -->
@@ -481,6 +487,30 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     
     <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        const navOverlay = document.getElementById('navOverlay');
+        
+        function toggleMenu() {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+        }
+        
+        hamburger.addEventListener('click', toggleMenu);
+        navOverlay.addEventListener('click', toggleMenu);
+        
+        // Close menu when clicking nav links
+        document.querySelectorAll('.nav-link, .nav-btn').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleMenu();
+                }
+            });
+        });
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
