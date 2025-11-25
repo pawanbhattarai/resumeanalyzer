@@ -1888,12 +1888,19 @@ input, textarea, select {
 }
 
 .nav-link {
-    color: var(--text-primary);
+    color: #1f2937;
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
     transition: var(--transition);
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-link i {
+    color: #1f2937;
 }
 
 .nav-link::after {
@@ -1914,6 +1921,11 @@ input, textarea, select {
 
 .nav-link:hover,
 .nav-link.active {
+    color: var(--primary-color);
+}
+
+.nav-link:hover i,
+.nav-link.active i {
     color: var(--primary-color);
 }
 
