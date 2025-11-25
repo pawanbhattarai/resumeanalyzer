@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
-from flask_login import login_user, logout_user, login_required, current_user
-from models import User, db
-from forms import RegistrationForm, LoginForm
+from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask_login import current_user, login_user, logout_user, login_required
+from extensions import db
+from models import User
+from flask import Blueprint, request, render_template, redirect, url_for, flash, current_app
 from datetime import datetime
-
+from forms import RegistrationForm, LoginForm
 auth = Blueprint('auth', __name__)
 
 @auth.route('/register', methods=['GET', 'POST'])

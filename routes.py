@@ -2,7 +2,7 @@ from flask import render_template, request, jsonify, redirect, url_for, flash, s
 from flask_login import login_required, current_user
 from models import User, AnalysisHistory, SavedResume
 from forms import AnalysisForm, ProfileForm, ChangePasswordForm, SavedResumeForm
-from app import db
+from extensions import db
 from ml_engine import ResumeAnalyzer
 from datetime import datetime
 

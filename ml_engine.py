@@ -4,7 +4,7 @@ import json
 from collections import defaultdict, Counter
 from data.real_training_data import REAL_TRAINING_DATA
 
-print(f"🎯 Loaded AUTHENTIC training dataset with {len(REAL_TRAINING_DATA)} examples from real LinkedIn, Indeed, and GitHub job data!")
+print(f"Loaded dataset")
 DEFAULT_TRAINING_DATA = REAL_TRAINING_DATA
 
 class ResumeAnalyzer:
@@ -119,7 +119,7 @@ class ResumeAnalyzer:
         if training_data is None:
             training_data = DEFAULT_TRAINING_DATA
             
-        print(f"🧠 Training model with {len(training_data)} examples...")
+        print(f"Training model")
         
         # Initialize counters
         class_counts = Counter()
