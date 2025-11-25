@@ -1,186 +1,162 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Dashboard - Resume Analyzer</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-        <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    </head>
-    <body>
-        <div class="container">
-            <!-- Navigation -->
-            <nav class="navbar">
-                <div class="nav-content">
-                    <div class="nav-brand">
-                        <i class="fas fa-brain"></i>
-                        <span>Resume Analyzer</span>
-                    </div>
-                <div class="nav-menu">
-                    <a
-                        href="{{ url_for('dashboard') }}"
-                        class="nav-link active"
-                    >
-                        <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
-                    </a>
-                    <a href="{{ url_for('analyze') }}" class="nav-link">
-                        <i class="fas fa-search"></i>
-                        New Analysis
-                    </a>
-                    <a href="{{ url_for('history') }}" class="nav-link">
-                        <i class="fas fa-history"></i>
-                        History
-                    </a>
-                    <a href="{{ url_for('profile') }}" class="nav-link">
-                        <i class="fas fa-user-cog"></i>
-                        Profile
-                    </a>
-                    <div class="nav-dropdown">
-                        <a href="#" class="nav-link dropdown-toggle">
-                            <i class="fas fa-user"></i>
-                            {{ current_user.first_name }}
-                        </a>
-                        <div class="dropdown-menu">
-                            <a
-                                href="{{ url_for('auth.logout') }}"
-                                class="dropdown-item"
-                            >
-                                <i class="fas fa-sign-out-alt"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
 
-        <!-- Header Section -->
-        <header class="header">
-            <div class="header-content">
-                <h1 class="title">
-                    Welcome back, {{ current_user.first_name }}!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Resume Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="modern-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-file-contract"></i>
+                <span>ResumeMatch AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="{{ url_for('analyze') }}" class="nav-link">
+                    <i class="fas fa-search"></i> New Analysis
+                </a>
+                <a href="{{ url_for('history') }}" class="nav-link">
+                    <i class="fas fa-history"></i> History
+                </a>
+                <a href="{{ url_for('profile') }}" class="nav-link">
+                    <i class="fas fa-user-cog"></i> Profile
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="nav-btn register-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="hero-section" style="margin-top: 70px; padding: 3rem 2rem;">
+        <div class="hero-container" style="grid-template-columns: 1fr; text-align: center;">
+            <div class="hero-content">
+                <h1 class="hero-title" style="font-size: 2.5rem;">
+                    Welcome back, <span class="gradient-text">{{ current_user.first_name }}</span>!
                 </h1>
-                <p class="subtitle">
+                <p class="hero-subtitle">
                     Ready to analyze your resume compatibility? Track your progress and improve your job prospects.
                 </p>
-                <div class="dashboard-stats">
+                <div class="hero-stats" style="justify-content: center; margin-top: 2rem;">
                     <div class="stat-item">
-                        <i class="fas fa-chart-line"></i>
-                        <span class="stat-number">{{ total_analyses }}</span>
-                        <span class="stat-label">Total Analyses</span>
+                        <div class="stat-number">{{ total_analyses }}</div>
+                        <div class="stat-label">Total Analyses</div>
                     </div>
                     <div class="stat-item">
-                        <i class="fas fa-percentage"></i>
-                        <span class="stat-number">{{ avg_score }}%</span>
-                        <span class="stat-label">Average Score</span>
+                        <div class="stat-number">{{ avg_score }}%</div>
+                        <div class="stat-label">Average Score</div>
                     </div>
                 </div>
             </div>
-        </header>
+        </div>
+    </section>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Quick Actions Section -->
-            <section class="input-section">
-                <div class="quick-actions">
-                    <a href="{{ url_for('analyze') }}" class="analyze-btn">
-                        <i class="fas fa-plus"></i>
-                        <span>Start New Analysis</span>
-                    </a>
-                </div>
-            </section>
+    <!-- Main Content -->
+    <div class="content-container" style="padding: 4rem 2rem;">
+        <!-- Quick Actions -->
+        <section style="text-align: center; margin-bottom: 4rem;">
+            <a href="{{ url_for('analyze') }}" class="hero-btn primary">
+                <i class="fas fa-plus"></i>
+                Start New Analysis
+            </a>
+        </section>
 
-                <!-- Recent Analyses -->
-                {% if recent_analyses %}
-                <section class="recent-section">
-                    <div class="section-header">
-                        <h2>Recent Analyses</h2>
-                        <a
-                            href="{{ url_for('history') }}"
-                            class="view-all-link"
-                        >
-                            View All <i class="fas fa-arrow-right"></i>
+        <!-- Recent Analyses -->
+        {% if recent_analyses %}
+        <section>
+            <div class="section-header">
+                <span class="section-tag">Recent Activity</span>
+                <h2 class="section-title">Recent Analyses</h2>
+                <a href="{{ url_for('history') }}" class="hero-btn secondary" style="margin-top: 1rem;">
+                    View All History <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                {% for analysis in recent_analyses %}
+                <div class="qa-card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                                {{ analysis.job_title }}
+                            </h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">{{ analysis.company_name }}</p>
+                        </div>
+                        <div style="background: var(--gradient-primary); color: white; padding: 0.5rem 1rem; border-radius: 50px; font-weight: 700; font-size: 1.1rem;">
+                            {{ "%.0f"|format(analysis.compatibility_score * 100) }}%
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">
+                            <i class="fas fa-calendar"></i>
+                            {{ analysis.created_at.strftime('%b %d, %Y') }}
+                        </span>
+                        <a href="{{ url_for('view_analysis', analysis_id=analysis.id) }}" class="hero-btn secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                            View Details
+                            <i class="fas fa-external-link-alt"></i>
                         </a>
                     </div>
-
-                    <div class="analyses-grid">
-                        {% for analysis in recent_analyses %}
-                        <div class="analysis-card">
-                            <div class="analysis-header">
-                                <div class="analysis-title">
-                                    <h3>{{ analysis.job_title }}</h3>
-                                    <p>{{ analysis.company_name }}</p>
-                                </div>
-                                <div
-                                    class="compatibility-badge {{ analysis.compatibility_level.lower().replace(' ', '-') }}"
-                                >
-                                    {{
-                                    "%.0f"|format(analysis.compatibility_score *
-                                    100) }}%
-                                </div>
-                            </div>
-                            <div class="analysis-meta">
-                                <span class="analysis-date">
-                                    <i class="fas fa-calendar"></i>
-                                    {{ analysis.created_at.strftime('%b %d, %Y')
-                                    }}
-                                </span>
-                                <a
-                                    href="{{ url_for('view_analysis', analysis_id=analysis.id) }}"
-                                    class="view-link"
-                                >
-                                    View Details
-                                    <i class="fas fa-external-link-alt"></i>
-                                </a>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </section>
-                {% else %}
-                <section class="empty-state">
-                    <div class="empty-card">
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% else %}
+        <section class="cta-section" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 24px;">
+            <div class="cta-container">
+                <div class="cta-content">
+                    <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem; opacity: 0.5;">
                         <i class="fas fa-search"></i>
-                        <h3>No analyses yet</h3>
-                        <p>
-                            Start your first resume analysis to see your
-                            compatibility scores and improvement
-                            recommendations.
-                        </p>
-                        <a
-                            href="{{ url_for('analyze') }}"
-                            class="action-btn primary"
-                        >
+                    </div>
+                    <h3 class="cta-title" style="color: var(--text-primary); font-size: 2rem;">No analyses yet</h3>
+                    <p class="cta-subtitle" style="color: var(--text-secondary);">
+                        Start your first resume analysis to see your compatibility scores and improvement recommendations.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('analyze') }}" class="cta-btn primary">
                             <i class="fas fa-rocket"></i>
                             Get Started
                         </a>
                     </div>
-                </section>
-                {% endif %}
-            </main>
-        </div>
-
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %} {% if
-        messages %}
-        <div class="flash-container">
-            {% for category, message in messages %}
-            <div class="flash-message flash-{{ category }}">
-                <i class="fas fa-info-circle"></i>
-                {{ message }}
-                <button class="flash-close">&times;</button>
+                </div>
             </div>
-            {% endfor %}
-        </div>
-        {% endif %} {% endwith %}
+        </section>
+        {% endif %}
+    </div>
 
-        <script>
-            // Flash message auto-hide
-            document.querySelectorAll(".flash-message").forEach((msg) => {
-                setTimeout(() => msg.remove(), 5000);
-                msg.querySelector(".flash-close").onclick = () => msg.remove();
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div style="position: fixed; top: 90px; right: 20px; z-index: 1000; max-width: 400px;">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" style="margin-bottom: 1rem; animation: slideIn 0.3s ease;">
+            <i class="fas fa-info-circle"></i>
+            {{ message }}
+            <button onclick="this.parentElement.remove()" style="background: none; border: none; color: inherit; cursor: pointer; font-size: 1.2rem; padding: 0; margin-left: auto;">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <script>
+        // Auto-hide flash messages
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
             });
-        </script>
-    </body>
+        }, 5000);
+    </script>
+</body>
 </html>
