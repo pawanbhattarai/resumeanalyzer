@@ -555,34 +555,544 @@
     color: #4f46e5;
 }
 
-/* Responsive Design */
+/* ========================================
+   RESPONSIVE DESIGN - Dashboard
+   ========================================*/
+
+/* Large Tablet (1024px and below) */
+@media (max-width: 1024px) {
+    .welcome-card {
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    .welcome-content h1 {
+        font-size: 2.25rem;
+    }
+
+    .welcome-content p {
+        font-size: 1rem;
+    }
+
+    .welcome-stats {
+        gap: 0.875rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem;
+    }
+
+    .analyses-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+/* Tablet (768px and below) */
 @media (max-width: 768px) {
+    /* Dashboard Stats */
     .dashboard-stats {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 1rem;
     }
     
     .stat-item {
-        min-width: auto;
-        padding: 1rem;
+        min-width: 140px;
+        flex: 1 1 calc(50% - 0.5rem);
+        max-width: calc(50% - 0.5rem);
+        padding: 1.25rem 1rem;
     }
-    
+
+    .stat-item i {
+        font-size: 1.75rem;
+    }
+
+    .stat-number {
+        font-size: 1.75rem;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+    }
+
+    /* Navigation */
     .nav-menu {
-        flex-direction: column;
+        flex-wrap: wrap;
         gap: 0.5rem;
+        justify-content: center;
     }
-    
+
+    .nav-link {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.85rem;
+    }
+
+    /* Welcome Section */
+    .welcome-card {
+        grid-template-columns: 1fr;
+        padding: 2rem 1.5rem;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .welcome-content h1 {
+        font-size: 2rem;
+    }
+
+    .welcome-content p {
+        font-size: 0.95rem;
+    }
+
+    .action-btn {
+        padding: 0.875rem 1.75rem;
+        font-size: 1rem;
+    }
+
+    .welcome-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    /* Analysis Grid */
     .analyses-grid {
         grid-template-columns: 1fr;
+        gap: 1.25rem;
     }
-    
+
+    .analysis-card {
+        padding: 1.25rem;
+    }
+
+    /* Section Headers */
     .section-header {
-        flex-direction: column;
-        align-items: start;
-        gap: 0.5rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
     }
-    
+
+    .section-header h2 {
+        font-size: 1.35rem;
+    }
+
+    /* Title */
     .title {
         font-size: 2rem !important;
+    }
+
+    /* Analysis Details */
+    .analysis-details {
+        padding: 1.5rem;
+    }
+
+    .analysis-header {
+        padding: 1.5rem;
+    }
+
+    .job-info h3 {
+        font-size: 1.3rem;
+    }
+
+    .score-circle {
+        width: 130px;
+        height: 130px;
+    }
+
+    .score-value {
+        font-size: 2.25rem;
+    }
+
+    /* Skill Section */
+    .skill-section {
+        padding: 1.25rem;
+    }
+
+    .skill-section h3,
+    .skill-section h4 {
+        font-size: 1.15rem;
+    }
+
+    .skill-item {
+        padding: 0.875rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .skill-percentage {
+        align-self: flex-end;
+    }
+
+    .recommendation-item {
+        padding: 1rem;
+    }
+
+    .rec-content strong {
+        font-size: 0.95rem;
+    }
+
+    .impact {
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile (576px and below) */
+@media (max-width: 576px) {
+    /* Dashboard Stats */
+    .dashboard-stats {
+        flex-direction: column;
+        gap: 0.875rem;
+    }
+
+    .stat-item {
+        flex: 1 1 auto;
+        max-width: 100%;
+        min-width: auto;
+        padding: 1.125rem 1rem;
+    }
+
+    .stat-item i {
+        font-size: 1.6rem;
+    }
+
+    .stat-number {
+        font-size: 1.6rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    /* Navigation */
+    .nav-content {
+        padding: 0 12px;
+    }
+
+    .nav-brand {
+        font-size: 1rem;
+    }
+
+    .nav-menu {
+        width: 100%;
+        padding-top: 0.75rem;
+        margin-top: 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-link {
+        flex: 1;
+        justify-content: center;
+        padding: 0.5rem 0.625rem;
+        font-size: 0.75rem;
+    }
+
+    .nav-link i {
+        font-size: 0.9rem;
+    }
+
+    /* Welcome Card */
+    .welcome-card {
+        padding: 1.75rem 1.25rem;
+        gap: 1.5rem;
+    }
+
+    .welcome-content h1 {
+        font-size: 1.75rem;
+        line-height: 1.3;
+    }
+
+    .welcome-content p {
+        font-size: 0.9rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .action-btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .welcome-stats {
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem 1rem;
+    }
+
+    .stat-icon {
+        font-size: 1.75rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.75rem;
+    }
+
+    .stat-info p {
+        font-size: 0.85rem;
+    }
+
+    /* Empty State */
+    .empty-card {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .empty-card i {
+        font-size: 3.5rem;
+    }
+
+    .empty-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .empty-card p {
+        font-size: 0.9rem;
+    }
+
+    /* Section Headers */
+    .section-header {
+        margin-bottom: 1.25rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .view-all-link {
+        font-size: 0.85rem;
+    }
+
+    /* Analysis Cards */
+    .analysis-card {
+        padding: 1.125rem;
+    }
+
+    .analysis-title h3 {
+        font-size: 1rem;
+    }
+
+    .analysis-title p {
+        font-size: 0.85rem;
+    }
+
+    .compatibility-badge {
+        padding: 0.4rem 0.875rem;
+        font-size: 0.85rem;
+    }
+
+    .analysis-date {
+        font-size: 0.8rem;
+    }
+
+    .view-link {
+        font-size: 0.85rem;
+    }
+
+    /* Analysis Details Page */
+    .analysis-details {
+        padding: 1.25rem 1rem;
+    }
+
+    .analysis-header {
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .job-info h3 {
+        font-size: 1.2rem;
+    }
+
+    .job-info .company {
+        font-size: 1rem;
+    }
+
+    .score-circle {
+        width: 120px;
+        height: 120px;
+    }
+
+    .score-value {
+        font-size: 2rem;
+    }
+
+    .score-label {
+        font-size: 0.85rem;
+    }
+
+    /* Skill Section */
+    .skill-section {
+        padding: 1.125rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .skill-section h3,
+    .skill-section h4 {
+        font-size: 1.05rem;
+        margin-bottom: 0.875rem;
+    }
+
+    .skill-item {
+        padding: 0.75rem;
+        margin-bottom: 0.625rem;
+    }
+
+    .skill-name {
+        font-size: 0.9rem;
+    }
+
+    .skill-percentage {
+        padding: 0.4rem 0.875rem;
+        font-size: 0.85rem;
+        min-width: 55px;
+    }
+
+    .recommendation-item {
+        padding: 0.875rem;
+        margin-bottom: 0.875rem;
+    }
+
+    .recommendation-item i {
+        font-size: 1.1rem;
+    }
+
+    .rec-content strong {
+        font-size: 0.9rem;
+    }
+
+    .rec-content {
+        font-size: 0.9rem;
+    }
+
+    .impact {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.625rem;
+    }
+}
+
+/* Extra Small Mobile (480px and below) */
+@media (max-width: 480px) {
+    .stat-item {
+        padding: 1rem 0.875rem;
+    }
+
+    .stat-item i {
+        font-size: 1.5rem;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    .welcome-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .welcome-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .welcome-content p {
+        font-size: 0.85rem;
+    }
+
+    .action-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+    }
+
+    .stat-card {
+        padding: 1rem 0.875rem;
+    }
+
+    .stat-icon {
+        font-size: 1.6rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.6rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.15rem;
+    }
+
+    .nav-link {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .nav-link span {
+        display: none; /* Hide text, keep icons only */
+    }
+
+    .nav-link i {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .analysis-card {
+        padding: 1rem;
+    }
+
+    .analysis-title h3 {
+        font-size: 0.95rem;
+    }
+
+    .compatibility-badge {
+        padding: 0.35rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .score-circle {
+        width: 110px;
+        height: 110px;
+    }
+
+    .score-value {
+        font-size: 1.85rem;
+    }
+}
+
+/* Landscape Orientation */
+@media (max-height: 600px) and (orientation: landscape) {
+    .welcome-card {
+        padding: 1.5rem;
+    }
+
+    .welcome-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-stats {
+        flex-direction: row;
+        gap: 0.75rem;
+    }
+
+    .stat-item {
+        padding: 0.875rem;
+    }
+
+    .stat-item i {
+        font-size: 1.4rem;
+    }
+
+    .stat-number {
+        font-size: 1.4rem;
+    }
+
+    .welcome-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat-card {
+        padding: 1rem 0.875rem;
     }
 }
