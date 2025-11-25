@@ -2453,6 +2453,7 @@ input, textarea, select {
     padding: 0.5rem;
     z-index: 1001;
     position: relative;
+    order: 3;
 }
 
 .hamburger span {
@@ -2508,6 +2509,7 @@ input, textarea, select {
 @media (max-width: 768px) {
     .hamburger {
         display: flex !important;
+        margin-left: auto;
     }
 
     .nav-container {
@@ -2516,11 +2518,13 @@ input, textarea, select {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: nowrap;
     }
 
     .modern-nav .nav-brand {
         font-size: 1.2rem;
-        flex: 1;
+        flex: 0 1 auto;
+        order: 1;
     }
 
     .modern-nav .nav-brand i {
