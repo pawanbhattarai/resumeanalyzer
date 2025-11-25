@@ -4,6 +4,7 @@ expertMode = true
 
 [nix]
 channel = "stable-25_05"
+packages = ["cargo", "glibcLocales", "libiconv", "rustc"]
 
 [userenv]
 
@@ -37,6 +38,10 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 46129
+externalPort = 3000
 
 [deployment]
 deploymentTarget = "autoscale"
