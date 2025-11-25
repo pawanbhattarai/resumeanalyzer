@@ -2452,6 +2452,7 @@ input, textarea, select {
     cursor: pointer;
     padding: 0.5rem;
     z-index: 1001;
+    position: relative;
 }
 
 .hamburger span {
@@ -2460,6 +2461,7 @@ input, textarea, select {
     background: var(--primary-color);
     border-radius: 2px;
     transition: all 0.3s ease;
+    display: block;
 }
 
 .hamburger.active span:nth-child(1) {
@@ -2505,16 +2507,20 @@ input, textarea, select {
 
 @media (max-width: 768px) {
     .hamburger {
-        display: flex;
+        display: flex !important;
     }
 
     .nav-container {
         padding: 0.75rem 1rem;
         position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .modern-nav .nav-brand {
         font-size: 1.2rem;
+        flex: 1;
     }
 
     .modern-nav .nav-brand i {
