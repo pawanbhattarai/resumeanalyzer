@@ -3,65 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume-Job Compatibility Analyzer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Resume Analyzer - AI-Powered Job Compatibility</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 </head>
 <body>
-    <div class="container">
-        <!-- Navigation -->
-        <nav class="navbar">
-            <div class="nav-content">
-                <div class="nav-brand">
-                    <i class="fas fa-brain"></i>
-                    <span>Resume Analyzer</span>
+    <!-- Navigation -->
+    <nav class="modern-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-file-contract"></i>
+                <span>ResumeMatch AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#analyze" class="nav-link">Analyze</a>
+                <a href="{{ url_for('auth.login') }}" class="nav-btn login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a href="{{ url_for('auth.register') }}" class="nav-btn register-btn">
+                    <i class="fas fa-user-plus"></i> Sign Up Free
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-sparkles"></i>
+                    <span>AI-Powered Analysis</span>
                 </div>
-                <div class="nav-menu">
-                    <a href="{{ url_for('index') }}" class="nav-link active">
-                        <i class="fas fa-home"></i>
-                        Home
+                <h1 class="hero-title">
+                    Match Your Resume to Your <span class="gradient-text">Dream Job</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Discover exactly how well your resume matches any job posting with our advanced machine learning technology. Get instant insights and actionable recommendations.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#analyze" class="hero-btn primary">
+                        <i class="fas fa-rocket"></i>
+                        Try Free Analysis
                     </a>
-                    <a href="{{ url_for('auth.login') }}" class="nav-link">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Login
+                    <a href="#how-it-works" class="hero-btn secondary">
+                        <i class="fas fa-play-circle"></i>
+                        See How It Works
                     </a>
-                    <a href="{{ url_for('auth.register') }}" class="nav-link">
-                        <i class="fas fa-user-plus"></i>
-                        Sign Up Free
-                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">4,926+</div>
+                        <div class="stat-label">Training Samples</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">2 Min</div>
+                        <div class="stat-label">Analysis Time</div>
+                    </div>
                 </div>
             </div>
-        </nav>
+            <div class="hero-image">
+                <div class="floating-card resume-card">
+                    <i class="fas fa-file-alt"></i>
+                    <div class="card-content">
+                        <div class="card-title">Resume</div>
+                        <div class="card-lines">
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line short"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="floating-card recruiter-card">
+                    <i class="fas fa-user-tie"></i>
+                    <div class="card-content">
+                        <div class="card-title">Recruiter View</div>
+                        <i class="fas fa-search-plus search-icon"></i>
+                    </div>
+                </div>
+                <div class="connection-line"></div>
+                <div class="ai-badge">
+                    <i class="fas fa-brain"></i>
+                    <span>AI Matching</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <!-- Header Section -->
-        <header class="header">
-            <div class="header-content">
-                <h1 class="title">
-                    AI-Powered Resume-Job Compatibility Analyzer
-                </h1>
-                <p class="subtitle">
-                    Discover how well your resume matches job requirements with our advanced ML technology
+    <!-- Why Section (Importance) -->
+    <section class="why-section">
+        <div class="content-container">
+            <div class="section-header">
+                <span class="section-tag">Why It Matters</span>
+                <h2 class="section-title">The New Reality of Job Applications</h2>
+                <p class="section-subtitle">
+                    Understanding how modern hiring works is crucial for your career success
                 </p>
+            </div>
+
+            <div class="qa-grid">
+                <div class="qa-card">
+                    <div class="qa-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="qa-question">How have resumes changed?</h3>
+                    <p class="qa-answer">
+                        Instead of being read only by humans, resumes are now first analyzed by machines. Applicant Tracking Systems (ATS) scan your resume before any recruiter sees it.
+                    </p>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="qa-question">Why is this especially important in tech?</h3>
+                    <p class="qa-answer">
+                        In technical fields like software development, cloud engineering, data science, and DevOps, automated systems are essential due to high application volumes and specific skill requirements.
+                    </p>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="qa-question">What does this mean for your resume?</h3>
+                    <p class="qa-answer">
+                        Your resume is no longer just a summary of experience. It's a data-driven document that must be structured so computers can easily understand and match it to job requirements.
+                    </p>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="qa-question">What do ATS systems look for?</h3>
+                    <p class="qa-answer">
+                        ATS scan for specific skills, keywords, and formatting details to decide whether you match the job requirements. Missing the right keywords means you might never reach human eyes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works-section">
+        <div class="content-container">
+            <div class="section-header">
+                <span class="section-tag">Simple Process</span>
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">
+                    Get professional insights in just 3 simple steps
+                </p>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h3 class="step-title">Paste Your Resume</h3>
+                    <p class="step-description">
+                        Copy and paste your resume content into our analyzer. Include your skills, experience, and education.
+                    </p>
+                </div>
+
+                <div class="step-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="step-title">Add Job Description</h3>
+                    <p class="step-description">
+                        Paste the job posting you're interested in. Our AI will analyze the requirements and qualifications.
+                    </p>
+                </div>
+
+                <div class="step-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="step-title">Get Instant Results</h3>
+                    <p class="step-description">
+                        Receive a detailed compatibility score, skill breakdown, and personalized recommendations to improve.
+                    </p>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h4>Custom ML Engine</h4>
+                    <p>Built from scratch with 4,926 real resume-job pairs</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h4>Instant Analysis</h4>
+                    <p>Get results in under 2 minutes</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>100% Private</h4>
+                    <p>Your data stays secure and confidential</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-lightbulb"></i>
+                    <h4>Actionable Tips</h4>
+                    <p>Get specific recommendations to improve</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analyze Section -->
+    <section id="analyze" class="analyze-section">
+        <div class="content-container">
+            <div class="section-header">
+                <span class="section-tag">Try It Now</span>
+                <h2 class="section-title">Analyze Your Resume</h2>
                 {% if has_used_free %}
                 <div class="free-used-notice">
                     <i class="fas fa-info-circle"></i>
-                    <span>You've used your free analysis. Register for unlimited access!</span>
+                    <span>You've used your free analysis. <a href="{{ url_for('auth.register') }}">Sign up free</a> for unlimited access!</span>
                 </div>
                 {% else %}
-                <div class="free-trial-notice">
-                    <i class="fas fa-gift"></i>
-                    <span>Try one free analysis before signing up!</span>
-                </div>
+                <p class="section-subtitle">
+                    Try one free analysis before signing up
+                </p>
                 {% endif %}
             </div>
-        </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Input Section -->
-            <section class="input-section" id="inputSection">
+            <div class="analyze-container">
                 <div class="input-grid">
                     <div class="input-card">
                         <div class="input-header">
@@ -96,21 +284,16 @@
                     </div>
                 </div>
 
-                <div class="analyze-section">
+                <div class="analyze-action">
                     <button id="analyzeBtn" class="analyze-btn" {% if has_used_free %}disabled{% endif %}>
                         <i class="fas fa-search"></i>
-                        <span>{% if has_used_free %}Free Analysis Used - Please Login{% else %}Try Free Analysis{% endif %}</span>
+                        <span>{% if has_used_free %}Free Analysis Used{% else %}Analyze Compatibility{% endif %}</span>
                     </button>
-                    {% if has_used_free %}
-                    <p class="analyze-notice">
-                        <a href="{{ url_for('auth.register') }}" class="register-link">Sign up free</a> for unlimited analyses and saved history
-                    </p>
-                    {% endif %}
                 </div>
-            </section>
+            </div>
 
             <!-- Loading Section -->
-            <section class="loading-section" id="loadingSection" style="display: none;">
+            <div class="loading-section" id="loadingSection" style="display: none;">
                 <div class="loading-card">
                     <div class="loading-spinner">
                         <i class="fas fa-cog fa-spin"></i>
@@ -124,11 +307,10 @@
                         <span class="progress-text" id="progressText">0%</span>
                     </div>
                 </div>
-            </section>
+            </div>
 
             <!-- Results Section -->
-            <section class="results-section" id="resultsSection" style="display: none;">
-                <!-- Compatibility Score Display -->
+            <div class="results-section" id="resultsSection" style="display: none;">
                 <div class="score-card">
                     <div class="score-display">
                         <div class="score-circle" id="scoreCircle">
@@ -145,16 +327,13 @@
                     </div>
                 </div>
 
-                <!-- Detailed Analysis -->
                 <div class="analysis-grid">
                     <div class="analysis-card">
                         <div class="card-header">
                             <i class="fas fa-code"></i>
                             <h3>Skill Analysis</h3>
                         </div>
-                        <div class="skill-breakdown" id="skillBreakdown">
-                            <!-- Skills will be populated by JavaScript -->
-                        </div>
+                        <div class="skill-breakdown" id="skillBreakdown"></div>
                     </div>
 
                     <div class="analysis-card">
@@ -162,24 +341,18 @@
                             <i class="fas fa-chart-line"></i>
                             <h3>Match Breakdown</h3>
                         </div>
-                        <div class="match-breakdown" id="matchBreakdown">
-                            <!-- Match details will be populated by JavaScript -->
-                        </div>
+                        <div class="match-breakdown" id="matchBreakdown"></div>
                     </div>
                 </div>
 
-                <!-- Recommendations -->
                 <div class="recommendations-card">
                     <div class="card-header">
                         <i class="fas fa-lightbulb"></i>
                         <h3>Improvement Recommendations</h3>
                     </div>
-                    <div class="recommendations-list" id="recommendationsList">
-                        <!-- Recommendations will be populated by JavaScript -->
-                    </div>
+                    <div class="recommendations-list" id="recommendationsList"></div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="action-buttons">
                     <button class="action-btn secondary" id="newAnalysisBtn">
                         <i class="fas fa-plus"></i>
@@ -190,10 +363,10 @@
                         Export Results
                     </button>
                 </div>
-            </section>
+            </div>
 
             <!-- Error Section -->
-            <section class="error-section" id="errorSection" style="display: none;">
+            <div class="error-section" id="errorSection" style="display: none;">
                 <div class="error-card">
                     <div class="error-icon">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -205,12 +378,142 @@
                         Try Again
                     </button>
                 </div>
-            </section>
-        </main>
-    </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Land Your Dream Job?</h2>
+                <p class="cta-subtitle">
+                    Join thousands of job seekers who have improved their resumes with our AI-powered analysis
+                </p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('auth.register') }}" class="cta-btn primary">
+                        <i class="fas fa-user-plus"></i>
+                        Sign Up Free
+                    </a>
+                    <a href="#analyze" class="cta-btn secondary">
+                        <i class="fas fa-rocket"></i>
+                        Try Free Analysis
+                    </a>
+                </div>
+                <div class="cta-features">
+                    <div class="cta-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>No credit card required</span>
+                    </div>
+                    <div class="cta-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Unlimited analyses</span>
+                    </div>
+                    <div class="cta-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Save your history</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <div class="footer-brand">
+                        <i class="fas fa-file-contract"></i>
+                        <span>ResumeMatch AI</span>
+                    </div>
+                    <p class="footer-description">
+                        AI-powered resume analysis to help you land your dream job. Get instant insights and improve your job application success rate.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-title">Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#analyze">Try Free</a></li>
+                        <li><a href="{{ url_for('auth.register') }}">Sign Up</a></li>
+                        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-title">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Resume Tips</a></li>
+                        <li><a href="#">Career Advice</a></li>
+                        <li><a href="#">Job Search Guide</a></li>
+                        <li><a href="#">ATS Optimization</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-title">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 ResumeMatch AI. All rights reserved.</p>
+                <p class="footer-tech">Built with custom Machine Learning • 4,926 training samples</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='charts.js') }}"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Active nav link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollY = window.pageYOffset;
+
+            sections.forEach(current => {
+                const sectionHeight = current.offsetHeight;
+                const sectionTop = current.offsetTop - 100;
+                const sectionId = current.getAttribute('id');
+                
+                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
