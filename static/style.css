@@ -1499,16 +1499,8 @@ input, textarea, select {
         font-size: 2.5rem;
     }
 
-    .score-label {
-        font-size: 0.8rem;
-    }
-
     .compatibility-level {
         font-size: 1.4rem;
-    }
-
-    .improvement-potential {
-        font-size: 0.95rem;
     }
 
     /* Cards */
@@ -2446,7 +2438,7 @@ input, textarea, select {
 .hamburger {
     display: none;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
