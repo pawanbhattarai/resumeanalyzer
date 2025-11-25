@@ -1,0 +1,25 @@
+Full job description
+Software Design Engineer
+OM Group is hiring a Software Design Engineer to develop and maintain software systems supporting our clients automation initiatives. This role designs and implements software solutions, integrates databases, and enhances system capabilities in alignment with mission needs.
+Key Responsibilities:
+Design, develop, and maintain custom software systems
+Collaborate with stakeholders to capture and implement requirements
+Enhance existing software solutions and database integration
+Conduct testing, troubleshooting, and performance optimization
+Support integration of automation tools into enterprise systems
+Qualifications:
+6+ years of software engineering experience
+Strong proficiency in C++, Java, and .NET
+Database and API integration experience
+Ability to analyze user needs and develop effective solutions
+Excellent problem-solving and collaboration skills
+Active Secret Security Clearance
+BS in Computer Science, Software Engineering, or related field
+Contingent upon award
+Compensation will be determined based on several factors, including relevant experience, education, skills, certifications, and market conditions, with an expected range of $150,000 - $175,000
+OM Group, Inc. is an Equal Opportunity Employer (EOE) committed to compliance with all applicable federal, state, and local employment laws. Veteran preference.
+OM Group, Inc. is dedicated to fostering a workplace that is free from unlawful discrimination and retaliation. Our hiring and employment practices are based on merit, ensuring that all individuals have equal opportunities based on their qualifications, experience, and skills.
+If you need reasonable accommodation to apply, please contact jobs@omgroupinc.us
+
+No Third Parties or C2C Solicitation
+This is a direct hire position ineligible for third party partnering. OM Group does not accept unsolicited resumes from third-party recruiters without a signed third-party agreement. Any unsolicited third-party resumes forwarded by recruiters to OM Group or to any of our managers or employees will be considered public information, may be treated as a direct application from the person identified in the resume, and will not be eligible for placement fee payment to the agency.
