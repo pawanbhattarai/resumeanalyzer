@@ -1,7 +1,7 @@
 
 /* Authentication Styles */
 .auth-body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -33,7 +33,7 @@
 
 .auth-header i {
     font-size: 3rem;
-    color: #667eea;
+    color: #3b82f6;
     margin-bottom: 20px;
     display: block;
 }
@@ -85,9 +85,9 @@
 
 .form-input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #3b82f6;
     background-color: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .form-input::placeholder {
@@ -103,7 +103,7 @@
 .checkbox {
     width: auto;
     margin: 0;
-    accent-color: #667eea;
+    accent-color: #3b82f6;
 }
 
 .checkbox-label {
@@ -138,23 +138,23 @@
 }
 
 .auth-btn.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
     color: white;
 }
 
 .auth-btn.primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
 }
 
 .auth-btn.secondary {
     background: transparent;
-    color: #667eea;
-    border-color: #667eea;
+    color: #3b82f6;
+    border-color: #3b82f6;
 }
 
 .auth-btn.secondary:hover {
-    background: #667eea;
+    background: #3b82f6;
     color: white;
 }
 
@@ -163,7 +163,7 @@
 }
 
 .auth-link {
-    color: #667eea;
+    color: #3b82f6;
     text-decoration: none;
     font-weight: 500;
     font-size: 0.9rem;
@@ -214,7 +214,7 @@
 }
 
 .back-link:hover {
-    color: #667eea;
+    color: #3b82f6;
 }
 
 .flash-message {
